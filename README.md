@@ -93,7 +93,6 @@ This will move the starter code to the `app-example` directory and create a blan
 ## Project Structure
 
 The project follows a modular and scalable structure:
-
 ├── app/
 │   ├── auth/               # Auth screens & logic
 │   ├── movies/             # Movie-related screens
