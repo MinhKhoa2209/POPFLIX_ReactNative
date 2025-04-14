@@ -90,7 +90,7 @@ npm run reset-project
 
 This will move the starter code to the `app-example` directory and create a blank `app` directory for development.
 
-## Project Structure
+## 📁 Project Structure
 
 The project follows a modular and scalable structure:
 ├── app/
