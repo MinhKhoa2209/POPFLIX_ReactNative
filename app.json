@@ -1,0 +1,55 @@
+{
+  "expo": {
+    "name": "popflix",
+    "slug": "popflix",
+    "owner": "anhcukhoa",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/logo.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/logo.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.anhcukhoa.popflix",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "popflix",
+              "host": "callback"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/logo.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "335252b0-aabe-45d7-8c48-1002c89d906f"
+      },
+      "router": {
+        "origin": false
+      }
+    },
+    "newArchEnabled": true
+  }
+}
