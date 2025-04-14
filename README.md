@@ -36,12 +36,14 @@ Make sure you have:
 ```bash
 git clone <your-repository-url>
 cd movie_app
+```
 
 ### 2. Install Dependencies
-
 ```bash
 npm install
 ```
+
+
 
 ### 3. Configure Environment Variables
 
