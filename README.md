@@ -1,33 +1,41 @@
-# My Mobile App Project
+# Popflix 🎬
 
-This is a mobile application built with **Expo**, **React Native**, **Appwrite**, **TypeScript**, and **Tailwind CSS**.
+A modern mobile movie app built with **Expo**, **React Native**, **Appwrite**, **TypeScript**, and **Tailwind CSS**.
 
-## Technologies Used
+> 📱 This project uses a **development build** for advanced native module support.  
+> 🎥 Movie data is fetched from the **KKPhim API** ([phimapi.com](https://phimapi.com)).
 
-- **Expo**: A framework for developing React Native applications with ease.
-- **React Native**: A framework for building native apps using React.
-- **Appwrite**: A backend-as-a-service platform for authentication, database, and storage.
-- **TypeScript**: A strongly typed programming language that builds on JavaScript.
-- **Tailwind CSS**: A utility-first CSS framework for styling.
+---
 
-## Prerequisites
+## 🛠️ Technologies Used
 
-Before running the project, ensure you have the following installed:
+- **Expo**: Easier development & deployment for React Native apps.
+- **React Native**: Build native apps using React.
+- **Appwrite**: Handles authentication and backend services.
+- **TypeScript**: Type-safe JavaScript.
+- **Tailwind CSS**: Utility-first CSS for rapid styling (via NativeWind).
 
-- **Node.js** (LTS version recommended)
+---
+
+## 📦 Prerequisites
+
+Make sure you have:
+
+- **Node.js** (LTS)
 - **npm** or **yarn**
-- **Expo CLI** (Install globally using `npm install -g expo-cli`)
-- **Appwrite Server** (If running locally, follow the [Appwrite installation guide](https://appwrite.io/docs))
-- **Android Studio** (for Android emulator) or **Xcode** (for iOS simulator)
+- **Expo CLI** (`npm install -g expo-cli`)
+- **Appwrite Server** (or Appwrite Cloud)
+- **Android Studio** or **Xcode** for simulators
 
-## Getting Started
+---
+
+## 🚀 Getting Started
 
 ### 1. Clone the Repository
 
 ```bash
 git clone <your-repository-url>
-cd <your-project-folder>
-```
+cd movie_app
 
 ### 2. Install Dependencies
 
@@ -84,21 +92,29 @@ This will move the starter code to the `app-example` directory and create a blan
 
 The project follows a modular and scalable structure:
 
-```
-├── app/                 # Main application files
-│   ├── screens/         # Screen components
-│   ├── components/      # Reusable UI components
-│   ├── hooks/           # Custom hooks
-│   ├── services/        # API service handlers
-│   ├── navigation/      # Navigation setup
-│   ├── styles/          # Global styles (Tailwind CSS)
-├── assets/              # Static assets (images, icons, etc.)
-├── constants/           # Constant values and configurations
-├── .env                 # Environment variables
-├── package.json         # Dependencies and scripts
-├── tsconfig.json        # TypeScript configuration
-└── README.md            # Project documentation
-```
+├── app/
+│   ├── auth/               # Auth screens & logic
+│   ├── movies/             # Movie-related screens
+│   ├── (tabs)/             # Tab navigation config
+│   ├── _layout.tsx         # App layout and navigation structure
+│   └── globals.css         # Global Tailwind styles
+│
+├── assets/                 # Images, fonts, icons
+├── components/             # Shared UI components
+├── constants/              # App constants (e.g., colors, configs)
+├── interfaces/             # TypeScript interfaces & types
+├── services/               # Appwrite + KKPhim API services
+├── types/                  # Global TypeScript types
+│
+├── .env                    # Environment variables
+├── app.json                # Expo config
+├── eas.json                # EAS build config
+├── babel.config.js
+├── metro.config.js
+├── package.json
+├── tsconfig.json
+└── README.md
+
 
 ## Learn More
 
