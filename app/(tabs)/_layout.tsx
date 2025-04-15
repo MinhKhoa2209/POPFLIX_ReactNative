@@ -1,23 +1,20 @@
 import { Tabs } from "expo-router";
-import { ImageBackground, Image, Text, View, StatusBar } from "react-native";
+import { Image, Text, View } from "react-native";
 import { icons } from "@/constants/icons";
-import { images } from "@/constants/images";
 
 const TabIcon = ({ focused, icon, title }: any) => {
   if (focused) {
     return (
-      <ImageBackground
-        source={images.highlight}
-        className="flex flex-row w-full flex-1 min-w-[112px] min-h-16 mt-4 justify-center items-center rounded-full overflow-hidden" >
-        <Image source={icon} tintColor="#151312" className="size-5" />
-        <Text className="text-secondary text-base font-semibold ml-2">{title}
-        </Text>
-      </ImageBackground>
+      <View
+      className="flex flex-row min-w-[90px] w-[62px] h-[60px] mt-6 justify-center items-center rounded-full bg-primary-600" >
+        <Image source={icon} tintColor="#FFFFFF" className="size-5" />
+        <Text className="text-white text-base font-semibold ml-2">{title}</Text>
+      </View>
     );
   }
 
   return (
-    <View className="size-full justify-center items-center mt-4 rounded-full">
+    <View className="size-full justify-center items-center mt-6 rounded-full">
       <Image source={icon} tintColor="#A8B5DB" className="size-5" />
     </View>
   );
@@ -35,15 +32,15 @@ const _Layout = () => {
           alignItems: "center",
         },
         tabBarStyle: {
-          backgroundColor: "#0F0D23",
-          borderRadius: 52,
-          marginHorizontal: 20,
+          backgroundColor: "#141414",
+          borderRadius: 9999,
+          marginHorizontal: 12,
           marginBottom: 36,
-          height: 52,
+          height: 60,
           position: "absolute",
           overflow: "hidden",
-          borderWidth: 1,
-          borderColor: "#0F0D23",
+          borderWidth: 0.5,
+          borderColor: "#3A3A3C"
         },
       }}
     >
@@ -52,7 +49,9 @@ const _Layout = () => {
         options={{
           title: "Home",
           headerShown: false,
-          tabBarIcon: ({ focused }) => <TabIcon focused={focused} icon={icons.home} title="Home" />,
+          tabBarIcon: ({ focused }) => (
+            <TabIcon focused={focused} icon={icons.home} title="Home" />
+          ),
         }}
       />
 
@@ -61,7 +60,9 @@ const _Layout = () => {
         options={{
           title: "Search",
           headerShown: false,
-          tabBarIcon: ({ focused }) => <TabIcon focused={focused} icon={icons.search} title="Search" />,
+          tabBarIcon: ({ focused }) => (
+            <TabIcon focused={focused} icon={icons.search} title="Search" />
+          ),
         }}
       />
 
@@ -70,7 +71,9 @@ const _Layout = () => {
         options={{
           title: "Saved",
           headerShown: false,
-          tabBarIcon: ({ focused }) => <TabIcon focused={focused} icon={icons.save} title="Saved" />,
+          tabBarIcon: ({ focused }) => (
+            <TabIcon focused={focused} icon={icons.save} title="Saved" />
+          ),
         }}
       />
 
@@ -79,7 +82,9 @@ const _Layout = () => {
         options={{
           title: "Profile",
           headerShown: false,
-          tabBarIcon: ({ focused }) => <TabIcon focused={focused} icon={icons.person} title="Profile" />,
+          tabBarIcon: ({ focused }) => (
+            <TabIcon focused={focused} icon={icons.person} title="Profile" />
+          ),
         }}
       />
     </Tabs>

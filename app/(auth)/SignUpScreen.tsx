@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
+import { View, Text, TextInput, TouchableOpacity,  ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import { account } from "@/services/appwrite";
 import { Entypo } from '@expo/vector-icons';
+import Toast from "react-native-toast-message";
 
 const SignUpScreen = () => {
   const router = useRouter();
@@ -13,7 +14,11 @@ const SignUpScreen = () => {
 
   const handleSignUp = async () => {
     if (!email || !password) {  
-      Alert.alert("Error", "Please enter your email and password");
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Please enter both email and password",
+      });
       return;
     }
   
@@ -21,9 +26,13 @@ const SignUpScreen = () => {
     try {
       const user = await account.create("unique()", email, password);
       console.log("User created:", user);
-      router.replace("/(tabs)");
+      router.replace("/(auth)/LoginScreen");
     } catch (error) {
-      Alert.alert("Error", error instanceof Error ? error.message : "An unknown error occurred");
+      Toast.show({  
+        type: "error",
+        text1: "Error",
+        text2: "An error occurred during sign up",
+      });
     } finally {
       setLoading(false);
     }
@@ -33,10 +42,10 @@ const SignUpScreen = () => {
   return (
     <View className="flex-1 justify-center px-6 bg-black">
       <Text className="text-center text-3xl font-bold text-white mb-6">Sign Up</Text>
-
+      <View className="bg-black w-full max-w-md p-6 rounded-2xl shadow-lg border border-white/40">
       <Text className="text-white">Email</Text>
       <TextInput 
-        className="border border-gray-600 p-3 rounded mb-4 text-white bg-white/10 h-14"
+        className="border border-dark-200 bg-background-dark p-3 rounded text-white mb-4 h-14"
         placeholder="name@example.com"
         placeholderTextColor="gray"
         value={email}
@@ -45,7 +54,7 @@ const SignUpScreen = () => {
         autoCapitalize="none"
       />
       <Text className="text-white">Password</Text>
-       <View className="flex-row items-center border border-gray-600 px-3 rounded mb-4 bg-white/10 h-14">
+        <View className="flex-row items-center border border-dark-200 bg-background-dark px-3 rounded mb-4 h-14">
         <TextInput
           className="flex-1 text-base text-white"
           placeholder="Enter your password"
@@ -55,27 +64,28 @@ const SignUpScreen = () => {
           onChangeText={setPassword}
         />
           <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
-            <Entypo name={isPasswordVisible ? "eye" : "eye-with-line"} size={22} color="gray" />
+            <Entypo name={isPasswordVisible ? "eye-with-line" : "eye"} size={22} color="gray" />
             </TouchableOpacity>
       </View>
 
       <TouchableOpacity
-        className="bg-blue-500 p-4 rounded w-full mt-5 mb-4"
+        className="bg-primary-600 p-4 rounded w-full mt-5 mb-4"
         onPress={handleSignUp}
         disabled={loading}
       >
         {loading ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text className="text-white text-center font-medium">Sign Up</Text>
+          <Text className="text-white text-center font-semibold">SIGNUP</Text>
         )}
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push("/(auth)/LoginScreen")}>
         <Text className="text-white text-center">
-          Already have an account? <Text className="text-blue-400">Log In</Text>
+          Already have an account? <Text className="text-red-500 ">Log In</Text>
         </Text>
       </TouchableOpacity>
+    </View>
     </View>
   );
 };

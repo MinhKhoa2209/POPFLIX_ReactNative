@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { View, ActivityIndicator, Text, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack, useRouter } from 'expo-router';
+import { Stack, useRouter, Slot } from 'expo-router';
 import { useGlobalContext } from '@/app/(auth)/AuthContext';
 import GlobalProvider from '@/app/(auth)/AuthContext';
-import "./globals.css";
+import Toast from 'react-native-toast-message';
+import './globals.css';
 
 const RootLayoutInner = () => {
   const { loading, isLogged } = useGlobalContext();
@@ -18,7 +19,7 @@ const RootLayoutInner = () => {
         router.replace('/(auth)/LoginScreen');
       }
     }
-  }, [loading, isLogged, router]);
+  }, [loading, isLogged]);
 
   if (loading) {
     return (
@@ -32,7 +33,8 @@ const RootLayoutInner = () => {
   }
 
   return (
-      <Stack screenOptions={{ headerShown: false }}></Stack>
+    <Stack screenOptions={{ headerShown: false }}>
+    </Stack>
   );
 };
 
@@ -40,10 +42,10 @@ const RootLayout = () => {
   return (
     <GlobalProvider>
       <StatusBar hidden={true} />
+      <Toast visibilityTime={1500} topOffset={StatusBar.currentHeight || 0} /> 
       <RootLayoutInner />
     </GlobalProvider>
   );
 };
-
 
 export default RootLayout;

@@ -26,7 +26,7 @@ const Saved = () => {
   );
 
   return (
-    <View className="bg-primary flex-1">
+    <View className="bg-black flex-1">
      <Image source={images.bg} className="absolute w-full z-0" resizeMode="cover" />
       <ScrollView
         className="flex-1 px-5"
@@ -34,7 +34,7 @@ const Saved = () => {
         contentContainerStyle={{ minHeight: "100%", paddingBottom: 10 }}
       >
   
-        <Image source={icons.logo} className="w-16 h-16 mt-16 mb-5 mx-auto" />
+        <Image source={icons.logo} className="w-24 h-24 mt-16 mb-5 mx-auto" />
 
         <View className="flex-1 mt-10">
           {loading ? (

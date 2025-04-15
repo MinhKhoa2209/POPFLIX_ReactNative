@@ -1,16 +1,17 @@
 import { Account, OAuthProvider, Avatars } from "react-native-appwrite";
-import * as Linking from "expo-linking";
 import { openAuthSessionAsync } from "expo-web-browser";
-import { client } from "@/services/appwrite";import { Alert } from "react-native";
-import { router } from "expo-router";
+import { client } from "@/services/appwrite";
+
 
 export const account = new Account(client);
 export const avatar = new Avatars(client);
 
 export async function login() {
   try {
-    const redirectUri = Linking.createURL("/");
 
+    const redirectUri = "popflix://callback";
+
+    console.log("redirectUri", redirectUri);
     const response = await account.createOAuth2Token(
       OAuthProvider.Google,
       redirectUri

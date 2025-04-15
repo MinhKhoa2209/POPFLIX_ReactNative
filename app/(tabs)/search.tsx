@@ -45,7 +45,7 @@ const Search = () => {
   }, [movies]);
 
   return (
-    <View className="flex-1 bg-primary">
+    <View className="flex-1 bg-black">
       <Image
         source={images.bg}
         className="flex-1 absolute w-full z-0"
@@ -68,7 +68,7 @@ const Search = () => {
         ListHeaderComponent={
           <>
             <View className="w-full flex-row justify-center mt-16 items-center">
-              <Image source={icons.logo} className="w-16 h-16 mx-auto" />
+              <Image source={icons.logo} className="w-24 h-24 mx-auto" />
             </View>
             <View className="my-5">
               <SearchBar

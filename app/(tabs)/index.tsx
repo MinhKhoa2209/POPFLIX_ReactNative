@@ -4,7 +4,6 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
-  SafeAreaView,
   ScrollView,
   Text,
   View,
@@ -33,7 +32,7 @@ export default function Index() {
   } = useFetch(() => fetchLatestMovies(1));
 
   return (
-    <View className="flex-1 bg-primary">
+    <View className="flex-1 bg-black">
       <Image source={images.bg} className="absolute w-full z-0" resizeMode="cover"/>
 
       <ScrollView
@@ -43,7 +42,7 @@ export default function Index() {
       >
         <Image
           source={icons.logo}
-          className="w-16 h-16 mt-16 mb-5 mx-auto"
+          className="w-24 h-24 mt-16 mb-5 mx-auto"
         />
          {moviesLoading || trendingLoading ? (
           <ActivityIndicator

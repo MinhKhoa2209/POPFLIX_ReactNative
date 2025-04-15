@@ -22,6 +22,10 @@ export const storage = new Storage(client);
 
 export const updateSearchCount = async (query: string, movie: any) => {
   try {
+    const buildImageUrl = (path?: string): string => {
+      if (!path) return 'https://placehold.co/300x450';
+      return path.startsWith('http') ? path : `https://phimimg.com/${path}`;
+    };
     const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
       Query.equal('searchTerm', query),
     ]);
@@ -37,7 +41,7 @@ export const updateSearchCount = async (query: string, movie: any) => {
         movie_id: movie.slug, 
         count: 1,
         title: movie.name,
-        poster_url: movie.poster_url, 
+        poster_url: buildImageUrl(movie.poster_path), 
       });
     }
 
