@@ -11,7 +11,6 @@ import { Movie } from '@/interfaces/interfaces';
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
-
   const {
     data: movies,
     loading,
@@ -67,8 +66,8 @@ const Search = () => {
         contentContainerStyle={{ paddingBottom: 100 }}
         ListHeaderComponent={
           <>
-            <View className="w-full flex-row justify-center mt-16 items-center">
-              <Image source={icons.logo} className="w-24 h-24 mx-auto" />
+            <View className="flex-row items-center justify-between mt-16 mb-5">
+              <Text className="text-primary-600 text-3xl font-bold">POPFLIX</Text>   
             </View>
             <View className="my-5">
               <SearchBar

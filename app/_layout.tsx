@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useRouter, Slot } from 'expo-router';
 import { useGlobalContext } from '@/app/(auth)/AuthContext';
 import GlobalProvider from '@/app/(auth)/AuthContext';
+import { ToastProvider } from './ToastContext';
 import Toast from 'react-native-toast-message';
 import './globals.css';
 
@@ -14,9 +15,13 @@ const RootLayoutInner = () => {
   useEffect(() => {
     if (!loading) {
       if (isLogged) {
-        router.replace('/(tabs)');
+        router.push('/(tabs)');
+        Toast.show({
+          type: 'success',
+          text1: 'Welcome back!'
+        });
       } else {
-        router.replace('/(auth)/LoginScreen');
+        router.push('/(auth)/LoginScreen');
       }
     }
   }, [loading, isLogged]);
@@ -32,18 +37,17 @@ const RootLayoutInner = () => {
     );
   }
 
-  return (
-    <Stack screenOptions={{ headerShown: false }}>
-    </Stack>
-  );
+  return <Stack screenOptions={{ headerShown: false }} />;
 };
 
 const RootLayout = () => {
   return (
     <GlobalProvider>
-      <StatusBar hidden={true} />
-      <Toast visibilityTime={1500} topOffset={StatusBar.currentHeight || 0} /> 
-      <RootLayoutInner />
+      <ToastProvider>
+        <StatusBar hidden={true} />
+        <RootLayoutInner />
+        <Toast visibilityTime={1000} topOffset={StatusBar.currentHeight || 0} />
+      </ToastProvider>
     </GlobalProvider>
   );
 };

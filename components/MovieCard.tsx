@@ -4,20 +4,18 @@ import { Text, Image, TouchableOpacity, View } from "react-native";
 import { icons } from "@/constants/icons";
 import { Movie } from "@/interfaces/interfaces";
 
-const buildImageUrl = (path?: string): string => {
-  if (!path) return 'https://placehold.co/300x450';
-  return path.startsWith('http') ? path : `https://phimimg.com/${path}`;
-};
-
 const MovieCard = ({ slug, poster_url, name, quality, year}: Movie) => {
-  const imageUrl = buildImageUrl(poster_url );
+  const baseUrl = "https://phimimg.com/";   
+  const fullPosterUrl = poster_url?.startsWith("http")
+  ? poster_url
+  : `${baseUrl}${poster_url}`;
 
   return (
     <Link href={`/movies/${slug}`} asChild>
       <TouchableOpacity className="w-[30%] mb-4">
         <Image
           source={{
-            uri: imageUrl,
+            uri: fullPosterUrl,
           }}
           className="w-full h-52 rounded-lg"
           resizeMode="cover"

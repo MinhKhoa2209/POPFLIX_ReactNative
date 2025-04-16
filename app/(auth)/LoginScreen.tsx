@@ -53,10 +53,6 @@ const LoginScreen = () => {
         if (rememberMe) {
           await AsyncStorage.setItem("rememberedEmail", email);
           await AsyncStorage.setItem("rememberedPassword", password);
-          Toast.show({
-            type: "success",
-            text1: "Google login successfully",
-          });
         } else {
           await AsyncStorage.removeItem("rememberedEmail");
           await AsyncStorage.removeItem("rememberedPassword");

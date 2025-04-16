@@ -6,6 +6,7 @@ import {
   Image,
   ScrollView,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import SearchBar from "@/components/SearchBar";
@@ -15,6 +16,7 @@ import { fetchLatestMovies } from "@/services/api";
 import MovieCard from "@/components/MovieCard";
 import { getTrendingMovies } from "@/services/appwrite";
 import TrendingCard from "@/components/TrendingCard";
+import { Movie } from "@/interfaces/interfaces";
 
 export default function Index() {
   const router = useRouter();
@@ -25,26 +27,44 @@ export default function Index() {
     error: trendingError,
   } = useFetch(getTrendingMovies);
 
+  const fetchLatestMoviesFivePages = async (): Promise<Movie[]> => {
+    const pages = [1, 2, 3, 4, 5];
+    const allMovies = await Promise.all(pages.map((p) => fetchLatestMovies(p)));
+    return allMovies.flat();
+  };
+
   const {
     data: movies,
     loading: moviesLoading,
     error: moviesError,
-  } = useFetch(() => fetchLatestMovies(1));
+  } = useFetch<Movie[]>(fetchLatestMoviesFivePages);
+
+  const currentYear = new Date().getFullYear();
+  const moviesThisYear = movies
+    ?.filter((movie) => movie.year === currentYear)
+    .slice(0, 12);
 
   return (
     <View className="flex-1 bg-black">
-      <Image source={images.bg} className="absolute w-full z-0" resizeMode="cover"/>
-
+      <Image source={images.bg} className="absolute w-full z-0" resizeMode="cover" />
       <ScrollView
         className="flex-1 px-5"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ minHeight: "100%", paddingBottom: 10 }}
       >
-        <Image
-          source={icons.logo}
-          className="w-24 h-24 mt-16 mb-5 mx-auto"
-        />
-         {moviesLoading || trendingLoading ? (
+        <View className="flex-row items-center justify-between mt-16 mb-5">
+          <Text className="text-primary-600 text-3xl font-bold">POPFLIX</Text>   
+          <TouchableOpacity onPress={() => router.push("/search")}>
+            <Image 
+              source={icons.search} 
+              className="w-8 h-8 " 
+              resizeMode="contain" 
+              tintColor="#E50914"
+            />
+          </TouchableOpacity>
+        </View>
+
+        {moviesLoading || trendingLoading ? (
           <ActivityIndicator
             size="large"
             color="#00f"
@@ -56,11 +76,6 @@ export default function Index() {
           </Text>
         ) : (
           <View className="flex-1 mt-5">
-            <SearchBar
-              onPress={() => router.push("/search")}
-              placeholder="Search for a movie"
-            />
-
             {/* Trending Movies */}
             {trendingMovies && (
               <View className="mt-10">
@@ -83,13 +98,13 @@ export default function Index() {
             )}
 
             {/* Latest Movies */}
-            {movies && (
+            {moviesThisYear && (
               <>
                 <Text className="text-lg text-white font-bold mt-5 mb-3">
-                  Latest Movies
+                  Latest Movies ({currentYear})
                 </Text>
                 <FlatList
-                  data={movies}
+                  data={moviesThisYear}
                   renderItem={({ item }) => <MovieCard {...item} />}
                   keyExtractor={(item) =>
                     item._id?.toString() ?? item.slug ?? Math.random().toString()

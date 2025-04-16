@@ -46,6 +46,11 @@ const Profile = () => {
     setIsLoading(false);
     if (result) {
       refetch();
+      Toast.show({
+        type: "success",
+        text1: "Logged out successfully!",
+        visibilityTime: 1500,
+      });
     } else {
       Toast.show({
         type: "error",
@@ -160,7 +165,10 @@ const Profile = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ minHeight: "100%", paddingBottom: 10 }}
       >
-        <Image source={icons.logo} className="w-24 h-24 mt-16 mb-5 mx-auto" />
+        <View className="flex-row items-center justify-between mt-16 mb-5">
+          <Text className="text-primary-600 text-3xl font-bold">POPFLIX</Text>
+        </View>
+
         <View className="items-center">
           <View className="relative mt-10">
             <Image
