@@ -17,15 +17,28 @@ import Toast from "react-native-toast-message";
 const MovieInfo = ({
   label,
   value,
+  isFullRow = false,
 }: {
   label: string;
   value?: string | number | null;
+  isFullRow?: boolean;
 }) => (
-  <View className="flex-col items-start justify-center mt-5">
-    <Text className="text-light-500 font-normal text-sm">{label}</Text>
-    <Text className="text-white font-bold text-sm mt-2">{value || "N/A"}</Text>
+  <View
+    className={`mt-4 ${
+      isFullRow ? "flex-col items-start" : "flex-row justify-between items-center"
+    }`}
+  >
+    <Text className="text-white text-sm font-medium opacity-70 w-1/3">{label}</Text>
+    <Text
+      className={`text-white font-semibold text-sm ${
+        isFullRow ? "mt-2 w-full" : "pl-3 w-2/3"
+      }`}
+    >
+      {value || "N/A"}
+    </Text>
   </View>
 );
+
 
 const getNames = (arr?: { name?: string }[]) => {
   if (!Array.isArray(arr)) return "N/A";
@@ -161,7 +174,7 @@ const MovieDetails = () => {
             <Text className="text-white">{movie?.time}</Text>
             <Text className="text-white">{movie?.quality}</Text>
           </View>
-
+          <MovieInfo label="Overview" value={movie?.content} isFullRow />
           <MovieInfo label="Original Title" value={movie?.origin_name} />
           <MovieInfo label="Genres" value={getNames(movie?.category)} />
           <MovieInfo label="Country" value={getNames(movie?.country)} />

@@ -160,14 +160,15 @@ const Profile = () => {
         className="flex-1 absolute w-full z-0"
         resizeMode="cover"
       />
+       <View className="flex-row items-center justify-between mt-16 mb-5 px-5">
+          <Text className="text-primary-600 text-3xl font-bold">POPFLIX</Text>
+        </View>
       <ScrollView
         className="flex-1 px-5"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ minHeight: "100%", paddingBottom: 10 }}
       >
-        <View className="flex-row items-center justify-between mt-16 mb-5">
-          <Text className="text-primary-600 text-3xl font-bold">POPFLIX</Text>
-        </View>
+       
 
         <View className="items-center">
           <View className="relative mt-10">

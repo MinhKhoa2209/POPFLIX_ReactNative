@@ -1,16 +1,15 @@
-import {Text,View, Image,  FlatList,  ActivityIndicator, } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { images } from '@/constants/images';
-import MovieCard from '@/components/MovieCard';
-import useFetch from '@/services/useFetch';
-import { searchMovies } from '@/services/api';
-import { icons } from '@/constants/icons';
-import SearchBar from '@/components/SearchBar';
-import { updateSearchCount } from '@/services/appwrite';
-import { Movie } from '@/interfaces/interfaces';
+import { Text, View, Image, FlatList, ActivityIndicator } from "react-native";
+import React, { useEffect, useState } from "react";
+import { images } from "@/constants/images";
+import MovieCard from "@/components/MovieCard";
+import useFetch from "@/services/useFetch";
+import { searchMovies } from "@/services/api";
+import SearchBar from "@/components/SearchBar";
+import { updateSearchCount } from "@/services/appwrite";
+import { Movie } from "@/interfaces/interfaces";
 
 const Search = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const {
     data: movies,
     loading,
@@ -34,11 +33,10 @@ const Search = () => {
   useEffect(() => {
     if (searchQuery.trim() && movies?.length > 0 && movies?.[0]) {
       try {
-         updateSearchCount(searchQuery, movies[0]);
-         console.log(movies[0]);
+        updateSearchCount(searchQuery, movies[0]);
+        console.log(movies[0]);
       } catch (err) {
-        console.log('❌ Lỗi trong updateSearchCount:', err);
-  
+        console.log("❌ Lỗi trong updateSearchCount:", err);
       }
     }
   }, [movies]);
@@ -50,6 +48,9 @@ const Search = () => {
         className="flex-1 absolute w-full z-0"
         resizeMode="cover"
       />
+      <View className="flex-row items-center justify-between mt-16 mb-5 px-5">
+        <Text className="text-primary-600 text-3xl font-bold">POPFLIX</Text>
+      </View>
       <FlatList
         data={movies}
         renderItem={({ item }: { item: Movie }) => <MovieCard {...item} />}
@@ -59,16 +60,13 @@ const Search = () => {
         className="px-5"
         numColumns={3}
         columnWrapperStyle={{
-          justifyContent: 'flex-start',
+          justifyContent: "flex-start",
           gap: 16,
           marginVertical: 16,
         }}
         contentContainerStyle={{ paddingBottom: 100 }}
         ListHeaderComponent={
           <>
-            <View className="flex-row items-center justify-between mt-16 mb-5">
-              <Text className="text-primary-600 text-3xl font-bold">POPFLIX</Text>   
-            </View>
             <View className="my-5">
               <SearchBar
                 placeholder="Search movies..."
@@ -93,7 +91,7 @@ const Search = () => {
 
             {!loading && !error && searchQuery.trim() && movies?.length > 0 && (
               <Text className="text-xl text-white font-bold px-2">
-                Search result for{' '}
+                Search result for{" "}
                 <Text className="text-accent">{searchQuery}</Text>
               </Text>
             )}
@@ -103,9 +101,7 @@ const Search = () => {
           !loading && !error ? (
             <View className="mt-10 px-5">
               <Text className="text-center text-gray-500">
-                {searchQuery.trim()
-                  ? 'No movies found'
-                  : 'Search for a movie'}
+                {searchQuery.trim() ? "No movies found" : "Search for a movie"}
               </Text>
             </View>
           ) : null

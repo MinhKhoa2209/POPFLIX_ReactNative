@@ -142,6 +142,9 @@ export const saveToFavorites = async (movie: Movie) => {
       status: movie.status,
       is_copyright: movie.is_copyright,
       trailer_url: movie.trailer_url || "",
+      content: movie.content || "", 
+      tmdb_vote_average: movie.tmdb?.vote_average ?? 0, 
+      tmdb_vote_count: movie.tmdb?.vote_count ?? 0
     });
 
     console.log("✅ Movie saved to favorites");
@@ -215,5 +218,8 @@ export const getFavoritesByUser = async (
     created: doc.created,
     is_copyright: doc.is_copyright,
     trailer_url: doc.trailer_url ?? "",
+    content: doc.content ?? "",
+    tmdb_vote_average: doc.tmdb_vote_average ?? 0,
+    tmdb_vote_count: doc.tmdb_vote_count ?? 0
   }));
 };

@@ -15,6 +15,11 @@ export interface Movie {
   status: string;
   is_copyright: boolean;
   trailer_url?: string;
+  content: string;
+  tmdb?: {
+    vote_average: number;
+    vote_count: number;
+  };
 }
 
 
@@ -61,6 +66,7 @@ interface MovieInfoProps {
   label: string;
   value?: string | number | null;
 }
+
  interface FavoriteMovie {
   $id: string; 
   user_id: string; 
@@ -79,4 +85,9 @@ interface MovieInfoProps {
   status: string;
   is_copyright: boolean;
   trailer_url?: string;
+  content: string;
+  tmdb?: {
+    vote_average: number;
+    vote_count: number;
+  };
 }

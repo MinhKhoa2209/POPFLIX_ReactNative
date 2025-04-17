@@ -10,8 +10,7 @@
     "userInterfaceStyle": "automatic",
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icons/logo.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/popflix.png"
       },
       "package": "com.anhcukhoa.popflix",
       "intentFilters": [
@@ -40,11 +39,12 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "react-native-video"
     ],
     "extra": {
       "eas": {
-        "projectId": "335252b0-aabe-45d7-8c48-1002c89d906f"
+        "projectId": "8bab006e-43e8-4870-882a-e455f2a6f464"
       },
       "router": {
         "origin": false
