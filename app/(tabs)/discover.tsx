@@ -8,7 +8,7 @@ import SearchBar from "@/components/SearchBar";
 import { updateSearchCount } from "@/services/appwrite";
 import { Movie } from "@/interfaces/interfaces";
 
-const Search = () => {
+const Discover = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const {
     data: movies,
@@ -98,17 +98,16 @@ const Search = () => {
           </>
         }
         ListEmptyComponent={
-          !loading && !error ? (
+          !loading && !error && searchQuery.trim() ? (
             <View className="mt-10 px-5">
-              <Text className="text-center text-gray-500">
-                {searchQuery.trim() ? "No movies found" : "Search for a movie"}
-              </Text>
+              <Text className="text-center text-gray-500">No movies found</Text>
             </View>
           ) : null
         }
+        
       />
     </View>
   );
 };
 
-export default Search;
+export default Discover;

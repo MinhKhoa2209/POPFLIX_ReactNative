@@ -37,9 +37,13 @@ interface TrendingCardProps {
   index: number;
 }
 
-interface Episode {
-  name: string;
-  link_embed: string;
+export interface Episode {
+  server_name: string; 
+  name: string;          
+  slug: string;         
+  filename: string;      
+  link_embed: string;   
+  link_m3u8: string;     
 }
 
 

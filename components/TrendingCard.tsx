@@ -4,6 +4,7 @@ import { Link } from 'expo-router'
 import { images } from '@/constants/images'
 import MaskedView from "@react-native-masked-view/masked-view";
 import { TrendingCardProps } from '@/interfaces/interfaces';
+import FastImage from 'react-native-fast-image';
 
 const buildImageUrl = (path?: string): string => {
     if (!path) return 'https://placehold.co/300x450';
@@ -11,7 +12,7 @@ const buildImageUrl = (path?: string): string => {
   };
 
   
-const TrendingCard = ({movie : {movie_id,title, poster_url}, index}: TrendingCardProps) => {
+const TrendingCard = React.memo(function TrendingCard({movie : {movie_id,title, poster_url}, index}: TrendingCardProps)  {
     const imageUrl = buildImageUrl(poster_url );
   return (
    <Link href={`/movies/${movie_id}`} asChild> 
@@ -29,6 +30,6 @@ const TrendingCard = ({movie : {movie_id,title, poster_url}, index}: TrendingCar
         </TouchableOpacity>
    </Link>
   )
-}
+});
 
 export default TrendingCard

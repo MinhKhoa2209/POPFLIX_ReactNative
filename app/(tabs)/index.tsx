@@ -2,10 +2,8 @@ import { icons } from "@/constants/icons";
 import { images } from "@/constants/images";
 import {
   ActivityIndicator,
-  Dimensions,
   FlatList,
   Image,
-  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -17,8 +15,7 @@ import MovieCard from "@/components/MovieCard";
 import { getTrendingMovies } from "@/services/appwrite";
 import TrendingCard from "@/components/TrendingCard";
 import { Movie } from "@/interfaces/interfaces";
-import Carousel from "@/components/HotMovieCarousel";
-
+import HotMovieFlatlist from "@/components/HotMovieFlatlist";
 
 export default function Index() {
   const router = useRouter();
@@ -63,7 +60,9 @@ export default function Index() {
     error: hotMoviesError,
   } = useFetch<Movie[]>(fetchHotMovies);
 
-  const { width: screenWidth } = Dimensions.get("window");
+  const isLoading = trendingLoading || moviesLoading || hotMoviesLoading;
+  const hasError = trendingError || moviesError || hotMoviesError;
+
   return (
     <View className="flex-1 bg-black">
       <Image
@@ -76,80 +75,76 @@ export default function Index() {
         <TouchableOpacity onPress={() => router.push("/search")}>
           <Image
             source={icons.search}
-            className="w-8 h-8 "
+            className="w-8 h-8"
             resizeMode="contain"
             tintColor="#E50914"
           />
         </TouchableOpacity>
       </View>
 
-      <ScrollView
-        className="flex-1 px-5"
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ minHeight: "100%", paddingBottom: 10 }}
-      >
-        {moviesLoading || trendingLoading ? (
-          <ActivityIndicator
-            size="large"
-            color="#00f"
-            className="mt-10 self-center"
-          />
-        ) : moviesError || trendingError ? (
-          <Text className="text-red-500">
-            Error: {moviesError?.message || trendingError?.message}
-          </Text>
-        ) : (
-          <View className="flex-1 mt-5">
-            {hotMovies && <Carousel data={hotMovies} />}
-            {trendingMovies && (
-              <View className="mt-10">
-                <Text className="text-lg text-white font-bold mb-3">
-                  Trending Movies
-                </Text>
-                <FlatList
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  className="mb-4 mt-3"
-                  data={trendingMovies}
-                  contentContainerStyle={{ gap: 26 }}
-                  renderItem={({ item, index }) => (
-                    <TrendingCard movie={item} index={index} />
-                  )}
-                  keyExtractor={(item) => item.movie_id.toString()}
-                  ItemSeparatorComponent={() => <View className="w-4" />}
-                />
-              </View>
-            )}
+      {isLoading ? (
+        <ActivityIndicator
+          size="large"
+          color="#00f"
+          className="mt-10 self-center"
+        />
+      ) : hasError ? (
+        <Text className="text-red-500 px-5">
+          Error: {trendingError?.message || moviesError?.message || hotMoviesError?.message}
+        </Text>
+      ) : (
+        <FlatList
+          data={moviesThisYear}
+          renderItem={({ item }) => <MovieCard {...item} />}
+          keyExtractor={(item) =>
+            item._id?.toString() ?? item.slug ?? Math.random().toString()
+          }
+          numColumns={3}
+          columnWrapperStyle={{
+            justifyContent: "flex-start",
+            gap: 20,
+            paddingRight: 5,
+            marginBottom: 10,
+          }}
+          contentContainerStyle={{ paddingBottom: 40, paddingHorizontal: 20 }}
+          ListHeaderComponent={
+            <View>
+              {/* Hot Movies */}
+              {hotMovies && (
+                <View className="-mx-5">
+                  <HotMovieFlatlist data={hotMovies} />
+                </View>
+              )}
 
-            {/* Latest Movies */}
-            {moviesThisYear && (
-              <>
-                <Text className="text-lg text-white font-bold mt-5 mb-3">
-                  Latest Movies ({currentYear})
-                </Text>
-                <FlatList
-                  data={moviesThisYear}
-                  renderItem={({ item }) => <MovieCard {...item} />}
-                  keyExtractor={(item) =>
-                    item._id?.toString() ??
-                    item.slug ??
-                    Math.random().toString()
-                  }
-                  numColumns={3}
-                  columnWrapperStyle={{
-                    justifyContent: "flex-start",
-                    gap: 20,
-                    paddingRight: 5,
-                    marginBottom: 10,
-                  }}
-                  className="mt-2 pb-32"
-                  scrollEnabled={false}
-                />
-              </>
-            )}
-          </View>
-        )}
-      </ScrollView>
+              {/* Trending Movies */}
+              {trendingMovies && (
+                <View className="mt-10">
+                  <Text className="text-lg text-white font-bold mb-3">
+                    Trending Movies
+                  </Text>
+                  <FlatList
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    data={trendingMovies}
+                    contentContainerStyle={{ gap: 26 }}
+                    renderItem={({ item, index }) => (
+                      <TrendingCard movie={item} index={index} />
+                    )}
+                    keyExtractor={(item) => item.movie_id.toString()}
+                    ItemSeparatorComponent={() => <View className="w-4" />}
+                  />
+                </View>
+              )}
+
+              {/* Latest Movies Title */}
+              <Text className="text-lg text-white font-bold mt-5 mb-3">
+                Latest Movies ({currentYear})
+              </Text>
+            </View>
+          }
+          scrollEnabled
+        />
+      )}
     </View>
   );
 }

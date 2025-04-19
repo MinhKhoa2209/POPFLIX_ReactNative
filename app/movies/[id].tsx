@@ -25,10 +25,14 @@ const MovieInfo = ({
 }) => (
   <View
     className={`mt-4 ${
-      isFullRow ? "flex-col items-start" : "flex-row justify-between items-center"
+      isFullRow
+        ? "flex-col items-start"
+        : "flex-row justify-between items-center"
     }`}
   >
-    <Text className="text-white text-sm font-medium opacity-70 w-1/3">{label}</Text>
+    <Text className="text-white text-sm font-medium opacity-70 w-1/3">
+      {label}
+    </Text>
     <Text
       className={`text-white font-semibold text-sm ${
         isFullRow ? "mt-2 w-full" : "pl-3 w-2/3"
@@ -38,7 +42,6 @@ const MovieInfo = ({
     </Text>
   </View>
 );
-
 
 const getNames = (arr?: { name?: string }[]) => {
   if (!Array.isArray(arr)) return "N/A";
@@ -68,15 +71,25 @@ const MovieDetails = () => {
     fetchMovieVideos(id)
   );
 
+  const episodes = Array.isArray(videoSources)
+    ? videoSources.filter(
+        (episode) => episode.link_m3u8 && episode.link_m3u8.trim() !== ""
+      )
+    : [];
+
+
+
+  const firstAvailableEpisode = episodes.find(
+    (ep) => ep.link_m3u8 && ep.link_m3u8.trim() !== ""
+  );
+
+
   const [isFavorite, setIsFavorite] = useState(false);
 
   const posterUrl = movie?.poster_url?.startsWith("http")
     ? movie.poster_url
     : `https://phimimg.com/${movie?.poster_url}`;
   const embedUrl = getYtbEmbedUrl(movie?.trailer_url || "");
-  const episodes = Array.isArray(videoSources)
-    ? videoSources.filter((ep) => ep.link_embed && ep.name)
-    : [];
 
   useEffect(() => {
     const checkFavorite = async () => {
@@ -135,21 +148,25 @@ const MovieDetails = () => {
             />
           </TouchableOpacity>
 
-          {episodes.length > 0 && (
+          {firstAvailableEpisode && (
             <TouchableOpacity
               className="absolute bottom-2 right-5 w-16 h-16 bg-white/20 border-2 border-white rounded-full z-10 items-center justify-center shadow-lg active:scale-95"
               onPress={() => {
-                const firstEp = episodes[0];
-                if (firstEp) {
-                  router.push({
-                    pathname: "/movies/watch",
-                    params: {
-                      link: firstEp.link_embed,
-                      title: `${movie?.name || ""} - ${firstEp.name}`,
-                      episodes: JSON.stringify(episodes),
-                    },
-                  });
-                }
+                router.push({
+                  pathname: "/movies/watch",
+                  params: {
+                    link: firstAvailableEpisode.link_m3u8,
+                    title: `${movie?.name || ""} - ${
+                      firstAvailableEpisode.name
+                    }`,
+                    episodes: JSON.stringify(
+                      episodes.map((e) => ({
+                        name: e.name,
+                        link: e.link_m3u8,
+                      }))
+                    ),
+                  },
+                });
               }}
             >
               <Image
@@ -211,23 +228,30 @@ const MovieDetails = () => {
               Watch Episodes
             </Text>
             <View className="flex flex-wrap flex-row justify-between gap-y-4">
-              {episodes.map((ep, index) => (
-                <View key={index} className="w-[30%] items-center">
+              {episodes.map((ep, idx) => (
+                <View key={idx} className="w-[30%] items-center">
                   <TouchableOpacity
-                    className="bg-dark-100 px-5 py-3 rounded-lg w-full items-center"
+                    className="bg-background-dark px-5 py-3 rounded-lg w-full items-center"
                     onPress={() =>
                       router.push({
                         pathname: "/movies/watch",
                         params: {
-                          link: ep.link_embed,
-                          title: `${movie?.name || ""} - ${ep.name}`,
-                          index: index.toString(),
-                          episodes: JSON.stringify(episodes),
+                          link: ep.link_m3u8,
+                          title: `${movie?.name || "Unknown Title"} - ${
+                            ep.name
+                          }`,
+                          episodes: JSON.stringify(
+                            episodes.map((e) => ({
+                              name: e.name,
+                              link: e.link_m3u8,
+                            }))
+                          ),
+                          index: String(idx),
                         },
                       })
                     }
                   >
-                    <Text className="text-white text-sm font-semibold text-center">
+                    <Text className="text-white text-lg font-bold">
                       {ep.name}
                     </Text>
                   </TouchableOpacity>
