@@ -160,7 +160,7 @@ const Profile = () => {
         className="flex-1 absolute w-full z-0"
         resizeMode="cover"
       />
-       <View className="flex-row items-center justify-between mt-16 mb-5 px-5">
+       <View className="flex-row items-center justify-between mt-10 mb-5 px-5">
           <Text className="text-primary-600 text-3xl font-bold">POPFLIX</Text>
         </View>
       <ScrollView

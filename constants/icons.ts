@@ -13,6 +13,8 @@ import edit from "@/assets/icons/edit.png";
 import sun from "@/assets/icons/sun.png";
 import unsave from "@/assets/icons/unsave.png";
 import logout from "@/assets/icons/logout.png";
+import category from "@/assets/icons/category.png";
+import back from "@/assets/icons/back.png";
 
 export const icons = {
   home,
@@ -28,5 +30,7 @@ export const icons = {
   edit,
   sun,
   logout,
-  unsave
+  unsave,
+  category,
+  back
 };

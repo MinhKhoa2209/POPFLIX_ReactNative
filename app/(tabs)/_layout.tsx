@@ -3,19 +3,23 @@ import { Image, Text, View } from "react-native";
 import { icons } from "@/constants/icons";
 
 const TabIcon = ({ focused, icon, title }: any) => {
-  if (focused) {
-    return (
-      <View
-      className="flex flex-row min-w-[90px] w-[62px] h-[60px] mt-6 justify-center items-center rounded-full bg-primary-600" >
-        <Image source={icon} tintColor="#FFFFFF" className="size-5" />
-        <Text className="text-white text-base font-semibold ml-2">{title}</Text>
-      </View>
-    );
-  }
-
   return (
-    <View className="size-full justify-center items-center mt-6 rounded-full">
-      <Image source={icon} tintColor="#A8B5DB" className="size-5" />
+    <View className="items-center justify-center gap-1 mt-4 w-[90px]">
+      <Image
+        source={icon}
+        tintColor={focused ? "#E50914" : "#FFFFFF"}
+        className="w-5 h-5"
+        resizeMode="contain"
+      />
+      <Text
+        numberOfLines={1}
+        ellipsizeMode="clip"
+        className={`text-xs font-semibold  ${
+          focused ? "text-[#E50914]" : "text-white"
+        }`}
+      >
+        {title}
+      </Text>
     </View>
   );
 };
@@ -25,22 +29,15 @@ const _Layout = () => {
     <Tabs
       screenOptions={{
         tabBarShowLabel: false,
+        tabBarStyle: {
+          backgroundColor: "#000000",
+          height: 80,
+          borderTopWidth: 0,
+        },
         tabBarItemStyle: {
-          width: "100%",
-          height: "100%",
           justifyContent: "center",
           alignItems: "center",
-        },
-        tabBarStyle: {
-          backgroundColor: "#141414",
-          borderRadius: 9999,
-          marginHorizontal: 12,
-          marginBottom: 36,
-          height: 60,
-          position: "absolute",
-          overflow: "hidden",
-          borderWidth: 0.5,
-          borderColor: "#3A3A3C"
+          paddingTop: 2
         },
       }}
     >
@@ -62,6 +59,17 @@ const _Layout = () => {
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <TabIcon focused={focused} icon={icons.search} title="Discover" />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="category"
+        options={{
+          title: "Category",
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TabIcon focused={focused} icon={icons.category} title="Category" />
           ),
         }}
       />

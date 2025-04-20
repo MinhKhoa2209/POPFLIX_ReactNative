@@ -17,11 +17,11 @@ const HotMovieCard = React.memo(function HotMovieCard({
   return (
     <Link href={`/movies/${slug}`} asChild>
       <TouchableOpacity>
-        <View className="mx-auto w-full h-[250px] relative overflow-hidden">
+        <View className="mx-auto w-full h-[250px] relative overflow-hidden  ">
         <Image
             source={{ uri: fullPosterUrl }}
             resizeMode="cover"
-            className="w-full h-full" 
+            className="w-full h-full " 
           />
           <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center p-4 bg-black/30">
             <Text

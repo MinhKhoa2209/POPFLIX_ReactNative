@@ -28,7 +28,7 @@ const Saved = () => {
   return (
     <View className="bg-black flex-1">
      <Image source={images.bg} className="absolute w-full z-0" resizeMode="cover" />
-     <View className="flex-row items-center justify-between mt-16 mb-5 px-5">
+     <View className="flex-row items-center justify-between mt-10 mb-5 px-5">
         <Text className="text-primary-600 text-3xl font-bold">POPFLIX</Text>   
       </View>
       <ScrollView
@@ -36,8 +36,6 @@ const Saved = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ minHeight: "100%", paddingBottom: 10 }}
       >
-
-
         <View className="flex-1 mt-10">
           {loading ? (
             <Text className="text-white text-center">Loading...</Text>

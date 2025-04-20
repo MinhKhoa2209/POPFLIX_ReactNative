@@ -70,9 +70,9 @@ export default function Index() {
         className="absolute w-full z-0"
         resizeMode="cover"
       />
-      <View className="flex-row items-center justify-between mt-16 mb-5 px-5">
+      <View className="flex-row items-center justify-between mt-10 mb-5 px-5">
         <Text className="text-primary-600 text-3xl font-bold">POPFLIX</Text>
-        <TouchableOpacity onPress={() => router.push("/search")}>
+        <TouchableOpacity onPress={() => router.push("/discover")}>
           <Image
             source={icons.search}
             className="w-8 h-8"

@@ -3,7 +3,6 @@ import { Text, Image, TouchableOpacity, View } from "react-native";
 
 import { icons } from "@/constants/icons";
 import { Movie } from "@/interfaces/interfaces";
-import FastImage from 'react-native-fast-image';
 import React from "react";
 
 const MovieCard = React.memo(function MovieCard({ slug, poster_url, name, quality, year}: Movie)  {
