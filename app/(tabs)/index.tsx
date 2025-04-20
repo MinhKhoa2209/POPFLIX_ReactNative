@@ -1,21 +1,14 @@
-import { icons } from "@/constants/icons";
-import { images } from "@/constants/images";
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
 import useFetch from "@/services/useFetch";
 import { fetchLatestMovies, fetchMovieListByType } from "@/services/api";
-import MovieCard from "@/components/MovieCard";
 import { getTrendingMovies } from "@/services/appwrite";
-import TrendingCard from "@/components/TrendingCard";
-import { Movie } from "@/interfaces/interfaces";
+import { Movie, TrendingMovie } from "@/interfaces/interfaces";
+import { icons } from "@/constants/icons";
 import HotMovieFlatlist from "@/components/HotMovieFlatlist";
+import TrendingSection from "@/components/section/TrendingSection";
+import LatestSection from "@/components/section/LatestSection";
+import { images } from "@/constants/images";
 
 export default function Index() {
   const router = useRouter();
@@ -27,7 +20,7 @@ export default function Index() {
   } = useFetch(getTrendingMovies);
 
   const fetchLatestMoviesFivePages = async (): Promise<Movie[]> => {
-    const pages = [1, 2, 3, 4, 5];
+    const pages = [1, 2, 3];
     const allMovies = await Promise.all(pages.map((p) => fetchLatestMovies(p)));
     return allMovies.flat();
   };
@@ -48,10 +41,9 @@ export default function Index() {
       type_list: "hoat-hinh",
       limit: "30",
     });
-    const filtered = response
+    return response
       ?.filter((movie) => movie.year === currentYear)
       .slice(0, 10);
-    return filtered;
   };
 
   const {
@@ -63,88 +55,61 @@ export default function Index() {
   const isLoading = trendingLoading || moviesLoading || hotMoviesLoading;
   const hasError = trendingError || moviesError || hotMoviesError;
 
-  return (
-    <View className="flex-1 bg-black">
-      <Image
-        source={images.bg}
-        className="absolute w-full z-0"
-        resizeMode="cover"
-      />
-      <View className="flex-row items-center justify-between mt-10 mb-5 px-5">
-        <Text className="text-primary-600 text-3xl font-bold">POPFLIX</Text>
-        <TouchableOpacity onPress={() => router.push("/discover")}>
-          <Image
-            source={icons.search}
-            className="w-8 h-8"
-            resizeMode="contain"
-            tintColor="#E50914"
-          />
-        </TouchableOpacity>
+  if (isLoading) {
+    return (
+      <View className="flex-1 bg-black justify-center items-center">
+        <ActivityIndicator size="large" color="#E50914" />
       </View>
+    );
+  }
 
-      {isLoading ? (
-        <ActivityIndicator
-          size="large"
-          color="#00f"
-          className="mt-10 self-center"
-        />
-      ) : hasError ? (
-        <Text className="text-red-500 px-5">
+  if (hasError) {
+    return (
+      <View className="flex-1 bg-black justify-center items-center px-6">
+        <Text className="text-red-500 text-center">
           Error: {trendingError?.message || moviesError?.message || hotMoviesError?.message}
         </Text>
-      ) : (
+      </View>
+    );
+  }
+
+  return (
+    <View className="flex-1 bg-black">
+
+      <Image
+        source={images.bg}
+        className="absolute w-full h-80 top-0 left-0"
+        resizeMode="cover"
+      />
+
+      <View className="z-10">
+        {/* Header */}
+        <View className="flex-row items-center justify-between mt-10 mb-5 px-5">
+          <Text className="text-primary-600 text-3xl font-bold">POPFLIX</Text>
+          <TouchableOpacity onPress={() => router.push("/discover")}>
+            <Image
+              source={icons.search}
+              className="w-8 h-8"
+              resizeMode="contain"
+              tintColor="#E50914"
+            />
+          </TouchableOpacity>
+        </View>
+
+        {/* FlatList */}
         <FlatList
-          data={moviesThisYear}
-          renderItem={({ item }) => <MovieCard {...item} />}
-          keyExtractor={(item) =>
-            item._id?.toString() ?? item.slug ?? Math.random().toString()
-          }
-          numColumns={3}
-          columnWrapperStyle={{
-            justifyContent: "flex-start",
-            gap: 20,
-            paddingRight: 5,
-            marginBottom: 10,
-          }}
-          contentContainerStyle={{ paddingBottom: 40, paddingHorizontal: 20 }}
-          ListHeaderComponent={
+          data={[{ trending: trendingMovies, hot: hotMovies, latest: moviesThisYear }]}
+          keyExtractor={(_, index) => index.toString()}
+          renderItem={({ item }) => (
             <View>
-              {/* Hot Movies */}
-              {hotMovies && (
-                <View className="-mx-5">
-                  <HotMovieFlatlist data={hotMovies} />
-                </View>
-              )}
-
-              {/* Trending Movies */}
-              {trendingMovies && (
-                <View className="mt-10">
-                  <Text className="text-lg text-white font-bold mb-3">
-                    Trending Movies
-                  </Text>
-                  <FlatList
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    data={trendingMovies}
-                    contentContainerStyle={{ gap: 26 }}
-                    renderItem={({ item, index }) => (
-                      <TrendingCard movie={item} index={index} />
-                    )}
-                    keyExtractor={(item) => item.movie_id.toString()}
-                    ItemSeparatorComponent={() => <View className="w-4" />}
-                  />
-                </View>
-              )}
-
-              {/* Latest Movies Title */}
-              <Text className="text-lg text-white font-bold mt-5 mb-3">
-                Latest Movies ({currentYear})
-              </Text>
+              {item.hot && item.hot.length > 0 && <HotMovieFlatlist data={item.hot} />}
+              <TrendingSection trendingMovies={item.trending as TrendingMovie[]} />
+              <LatestSection moviesThisYear={item.latest as Movie[]} />
             </View>
-          }
-          scrollEnabled
+          )}
+          ListFooterComponent={() => <View className="h-30" />}
         />
-      )}
+      </View>
     </View>
   );
 }

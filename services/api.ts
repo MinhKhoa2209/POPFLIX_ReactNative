@@ -98,10 +98,9 @@ export const fetchMovieListByType = async ({
   limit?: string;
 }) => {
   let allMovies: any[] = [];
-  let page = 1;
-  let totalPages = 1; 
-  
-  while (page <= totalPages) {
+  const totalPages = 5; 
+  const fetchPromises = Array.from({ length: totalPages }, (_, index) => {
+    const page = index + 1;
     const params = new URLSearchParams({
       page: page.toString(),
       sort_field,
@@ -114,25 +113,21 @@ export const fetchMovieListByType = async ({
     });
 
     const url = `${KKPHIM_BASE_URL}/v1/api/danh-sach/${type_list}?${params.toString()}`;
-    
-    try {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error("Failed to fetch movies by type");
-      const data = await response.json();
-      
-      allMovies = [...allMovies, ...data?.data?.items || []];
-      totalPages = data?.data?.total_pages || 1; // Set total pages from the response
-
-      page += 1; // Increment page for the next request
-
-    } catch (error) {
-      console.error("❌ Error fetching movies by type:", error);
-      break; // Exit the loop if there's an error
-    }
-  }
+    return fetch(url)
+      .then(response => response.json())
+      .then(data => data?.data?.items || [])
+      .catch(error => {
+        console.error("❌ Error fetching page", page, error);
+        return []; 
+      });
+  });
+  const results = await Promise.all(fetchPromises);
+  allMovies = results.flat();
 
   return allMovies;
 };
+
+
 
 /**
  * Get all genres

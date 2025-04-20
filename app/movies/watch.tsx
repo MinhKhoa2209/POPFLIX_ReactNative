@@ -1,5 +1,12 @@
 import React, { useRef, useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, Alert, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  Dimensions,
+  ScrollView,
+} from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import Video from "react-native-video";
 import { Ionicons } from "@expo/vector-icons";
@@ -87,65 +94,69 @@ const Watch = () => {
         )}
       </View>
 
-      <View className="flex-row items-center px-4 py-3">
-        <TouchableOpacity onPress={router.back} className="mr-2">
-          <Ionicons name="arrow-back" size={24} color="white" />
-        </TouchableOpacity>
-        <Text className="text-white text-base font-bold flex-shrink">
-          {`${title?.split(" - ")[0] || "Now Playing"} - ${
-            currentEpisode?.name || ""
-          }`}
-        </Text>
-      </View>
-
-      {!isSingleLink && parsedEpisodes.length > 1 && (
-        <View className="flex-row justify-center mt-3 px-6">
-          <TouchableOpacity
-            disabled={currentIndex <= 0}
-            onPress={() => handleEpisodeChange(currentIndex - 1)}
-            className={`items-center rounded-lg h-12 px-4 mx-2 w-40 justify-center ${
-              currentIndex <= 0 ? "bg-gray-600" : "bg-background-dark"
-            }`}
-          >
-            <Text className="text-white text-sm font-semibold">◀ Previous</Text>
+      <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
+        <View className="flex-row items-center px-4 py-3">
+          <TouchableOpacity onPress={router.back} className="mr-2">
+            <Ionicons name="arrow-back" size={24} color="white" />
           </TouchableOpacity>
-
-          <TouchableOpacity
-            disabled={currentIndex >= parsedEpisodes.length - 1}
-            onPress={() => handleEpisodeChange(currentIndex + 1)}
-            className={`items-center rounded-lg h-12 px-4 mx-2 w-40 justify-center ${
-              currentIndex >= parsedEpisodes.length - 1
-                ? "bg-gray-600"
-                : "bg-background-dark"
+          <Text className="text-white text-base font-bold flex-shrink">
+            {`${title?.split(" - ")[0] || "Now Playing"} - ${
+              currentEpisode?.name || ""
             }`}
-          >
-            <Text className="text-white text-sm font-semibold">Next ▶</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-
-      {!isSingleLink && parsedEpisodes.length > 0 && (
-        <View className="mt-6 px-4">
-          <Text className="text-white text-lg font-bold mb-3">
-            Choose Episode:
           </Text>
-          <View className="flex-row flex-wrap justify-between ">
-            {parsedEpisodes.map((ep, idx) => (
-              <TouchableOpacity
-                key={idx}
-                onPress={() => handleEpisodeChange(idx)}
-                className={` mb-3 px-5 py-3 rounded-lg items-center w-[30%] ${
-                  idx === currentIndex ? "bg-red-700" : "bg-background-dark"
-                }`}
-              >
-                <Text className="text-white text-base font-semibold">
-                  {ep.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
         </View>
-      )}
+
+        {!isSingleLink && parsedEpisodes.length > 1 && (
+          <View className="flex-row justify-center mt-3 px-6">
+            <TouchableOpacity
+              disabled={currentIndex <= 0}
+              onPress={() => handleEpisodeChange(currentIndex - 1)}
+              className={`items-center rounded-lg h-12 px-4 mx-2 w-40 justify-center ${
+                currentIndex <= 0 ? "bg-gray-600" : "bg-background-dark"
+              }`}
+            >
+              <Text className="text-white text-sm font-semibold">
+                ◀ Previous
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              disabled={currentIndex >= parsedEpisodes.length - 1}
+              onPress={() => handleEpisodeChange(currentIndex + 1)}
+              className={`items-center rounded-lg h-12 px-4 mx-2 w-40 justify-center ${
+                currentIndex >= parsedEpisodes.length - 1
+                  ? "bg-gray-600"
+                  : "bg-background-dark"
+              }`}
+            >
+              <Text className="text-white text-sm font-semibold">Next ▶</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {!isSingleLink && parsedEpisodes.length > 0 && (
+          <View className="mt-6 px-4">
+            <Text className="text-white text-lg font-bold mb-3">
+              Choose Episode:
+            </Text>
+            <View className="flex flex-row flex-wrap gap-y-4 gap-x-4 px-2">
+              {parsedEpisodes.map((ep, idx) => (
+                <TouchableOpacity
+                  key={idx}
+                  onPress={() => handleEpisodeChange(idx)}
+                  className={`w-[30%] items-center px-5 py-3 rounded-lg ${
+                    idx === currentIndex ? "bg-red-700" : "bg-background-dark"
+                  }`}
+                >
+                  <Text className="text-white text-base font-semibold">
+                    {ep.name}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 };

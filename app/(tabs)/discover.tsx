@@ -32,39 +32,32 @@ const Discover = () => {
     reset,
   } = useFetch(() => searchMovies({ keyword: searchQuery }), false);
 
+  // Fetch TV shows (load only one page first for better performance)
   useEffect(() => {
     const fetchTV = async () => {
       try {
         const typeListPool = ["tv-shows", "phim-le", "phim-bo", "hoat-hinh"];
-        const results: Movie[] = [];
         const uniqueMap = new Map<string, Movie>();
-
-        for (let i = 0; i < TOTAL_PAGES; i++) {
-          const randomType =
-            typeListPool[Math.floor(Math.random() * typeListPool.length)];
-          const randomPage = Math.floor(Math.random() * 5) + 1;
-
-          const pageData = await fetchMovieListByType({
-            type_list: randomType,
-            page: randomPage,
-            limit: ITEMS_PER_PAGE.toString(),
-          });
-
-          pageData.forEach((item: Movie) => {
-            if (!uniqueMap.has(item.slug)) {
-              uniqueMap.set(item.slug, item);
-            }
-          });
-        }
-
-        setTVShows(
-          Array.from(uniqueMap.values()).slice(0, TOTAL_PAGES * ITEMS_PER_PAGE)
-        );
+  
+        // Fetch only the first page
+        const results = await fetchMovieListByType({
+          type_list: typeListPool[Math.floor(Math.random() * typeListPool.length)],
+          limit: ITEMS_PER_PAGE.toString(),
+        });
+  
+        // Filter out duplicate movies by slug
+        results.forEach((item: Movie) => {
+          if (!uniqueMap.has(item.slug)) {
+            uniqueMap.set(item.slug, item);
+          }
+        });
+  
+        setTVShows(Array.from(uniqueMap.values()));
       } catch (err) {
         console.log("❌ Lỗi khi fetch TV shows:", err);
       }
     };
-
+  
     fetchTV();
   }, []);
 
@@ -93,6 +86,13 @@ const Discover = () => {
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
+
+  // Lazy loading for the next pages
+  const handleEndReached = () => {
+    if (currentPage < TOTAL_PAGES) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
 
   return (
     <View className="flex-1 bg-black">
@@ -132,16 +132,10 @@ const Discover = () => {
           ListHeaderComponent={
             <>
               {loading && (
-                <ActivityIndicator
-                  size="large"
-                  color="#0000ff"
-                  className="mt-3"
-                />
+                <ActivityIndicator size="large" color="#0000ff" className="mt-3" />
               )}
               {error && (
-                <Text className="text-red-500 px-5 my-3">
-                  Error: {error?.message}
-                </Text>
+                <Text className="text-red-500 px-5 my-3">Error: {error?.message}</Text>
               )}
               {!loading && !error && movies?.length > 0 && (
                 <Text className="text-xl text-white font-bold px-2">
@@ -154,9 +148,7 @@ const Discover = () => {
           ListEmptyComponent={
             !loading && !error ? (
               <View className="mt-10 px-5">
-                <Text className="text-center text-gray-500">
-                  No movies found
-                </Text>
+                <Text className="text-center text-gray-500">No movies found</Text>
               </View>
             ) : null
           }

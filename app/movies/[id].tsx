@@ -224,10 +224,10 @@ const MovieDetails = () => {
 
         {episodes.length > 0 && (
           <View className="mt-5 px-5">
-            <Text className="text-white text-lg font-bold mb-4">
+            <Text className="text-white text-lg font-bold mb-4 px-2">
               Watch Episodes
             </Text>
-            <View className="flex flex-wrap flex-row justify-between gap-y-4">
+            <View className="flex flex-row flex-wrap gap-y-4 gap-x-4 px-2">
               {episodes.map((ep, idx) => (
                 <View key={idx} className="w-[30%] items-center">
                   <TouchableOpacity
