@@ -75,3 +75,33 @@ export const movieIcons: Record<string, string> = {
   "tv-shows": "live-tv",
   "hoat-hinh": "animation"
 };
+
+export const categoryDisplayNames: Record<string, string> = {
+  "hanh-dong": "Hành động",
+  "co-trang": "Cổ trang",
+  "chien-tranh": "Chiến tranh",
+  "vien-tuong": "Viễn tưởng",
+  "kinh-di": "Kinh dị",
+  "tai-lieu": "Tài liệu",
+  "bi-an": "Bí ẩn",
+  "tinh-cam": "Tình cảm",
+  "tam-ly": "Tâm lý",
+  "the-thao": "Thể thao",
+  "phieu-luu": "Phiêu lưu",
+  "am-nhac": "Âm nhạc",
+  "gia-dinh": "Gia đình",
+  "hoc-duong": "Học đường",
+  "hai-huoc": "Hài hước",
+  "hinh-su": "Hình sự",
+  "vo-thuat": "Võ thuật",
+  "khoa-hoc": "Khoa học",
+  "than-thoai": "Thần thoại",
+  "chinh-kich": "Chính kịch",
+  "kinh-dien": "Kinh điển",
+
+  // movieCategories
+  "phim-le": "Phim lẻ",
+  "phim-bo": "Phim bộ",
+  "tv-shows": "TV Shows",
+  "hoat-hinh": "Hoạt hình"
+};  

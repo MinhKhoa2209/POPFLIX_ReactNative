@@ -1,5 +1,5 @@
 import { FlatList, Text, View } from "react-native";
-import TrendingCard from "@/components/TrendingCard";
+import TrendingCard from "@/components/cards/TrendingCard";
 import { Movie, TrendingMovie } from "@/interfaces/interfaces";
 
 const TrendingSection = ({ trendingMovies }: { trendingMovies: TrendingMovie[] }) => {

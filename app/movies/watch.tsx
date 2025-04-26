@@ -23,14 +23,12 @@ const Watch = () => {
     link: string;
   }>();
 
-  const parsedEpisodes = episodes
-    ? (JSON.parse(episodes) as { name: string; link: string }[])
-    : [];
-
+  const parsedEpisodes = episodes ? JSON.parse(episodes) : [];
   const defaultIndex = index ? Number(index) : 0;
-  const isSingleLink = !episodes && !!link;
+  const isSingleLink = !episodes && link;
 
   const [currentIndex, setCurrentIndex] = useState(defaultIndex);
+  const [playbackRate, setPlaybackRate] = useState(1.0);
   const playerRef = useRef<null | React.ComponentRef<typeof Video>>(null);
 
   const currentEpisode = isSingleLink
@@ -41,7 +39,6 @@ const Watch = () => {
     if (!currentEpisode?.link) {
       Alert.alert("Error", "Video link is invalid or missing.");
     }
-
     return () => {
       ScreenOrientation.lockAsync(
         ScreenOrientation.OrientationLock.PORTRAIT_UP
@@ -55,9 +52,8 @@ const Watch = () => {
   };
 
   const handleVideoEnd = () => {
-    const nextIndex = currentIndex + 1;
-    if (!isSingleLink && nextIndex < parsedEpisodes.length) {
-      setCurrentIndex(nextIndex);
+    if (!isSingleLink && currentIndex < parsedEpisodes.length - 1) {
+      setCurrentIndex(currentIndex + 1);
     }
   };
 
@@ -73,16 +69,28 @@ const Watch = () => {
     );
   };
 
+  const renderSpeedButton = (rate: number) => (
+    <TouchableOpacity
+      onPress={() => setPlaybackRate(rate)}
+      className={`items-center px-6 py-2 rounded-lg ${
+        playbackRate === rate ? "bg-red-700" : "bg-background-dark"
+      }`}
+    >
+      <Text className="text-white text-sm font-semibold">{rate}x</Text>
+    </TouchableOpacity>
+  );
+
   return (
     <SafeAreaView className="flex-1 bg-black">
-      <View className="w-full aspect-video bg-neutral-900">
+      <View className="w-full aspect-video ">
         {currentEpisode?.link ? (
           <Video
             ref={playerRef}
             source={{ uri: currentEpisode.link }}
             style={{ width: "100%", height: "100%" }}
             controls
-            resizeMode="contain"
+            resizeMode="cover"
+            rate={playbackRate}
             onEnd={handleVideoEnd}
             onFullscreenPlayerWillPresent={enterFullscreen}
             onFullscreenPlayerWillDismiss={exitFullscreen}
@@ -111,9 +119,7 @@ const Watch = () => {
             <TouchableOpacity
               disabled={currentIndex <= 0}
               onPress={() => handleEpisodeChange(currentIndex - 1)}
-              className={`items-center rounded-lg h-12 px-4 mx-2 w-40 justify-center ${
-                currentIndex <= 0 ? "bg-gray-600" : "bg-background-dark"
-              }`}
+              className="items-center rounded-lg h-12 px-4 mx-2 w-40 justify-center bg-background-dark"
             >
               <Text className="text-white text-sm font-semibold">
                 ◀ Previous
@@ -123,11 +129,7 @@ const Watch = () => {
             <TouchableOpacity
               disabled={currentIndex >= parsedEpisodes.length - 1}
               onPress={() => handleEpisodeChange(currentIndex + 1)}
-              className={`items-center rounded-lg h-12 px-4 mx-2 w-40 justify-center ${
-                currentIndex >= parsedEpisodes.length - 1
-                  ? "bg-gray-600"
-                  : "bg-background-dark"
-              }`}
+              className="items-center rounded-lg h-12 px-4 mx-2 w-40 justify-center bg-background-dark"
             >
               <Text className="text-white text-sm font-semibold">Next ▶</Text>
             </TouchableOpacity>
@@ -140,22 +142,32 @@ const Watch = () => {
               Choose Episode:
             </Text>
             <View className="flex flex-row flex-wrap gap-y-4 gap-x-4 px-2">
-              {parsedEpisodes.map((ep, idx) => (
-                <TouchableOpacity
-                  key={idx}
-                  onPress={() => handleEpisodeChange(idx)}
-                  className={`w-[30%] items-center px-5 py-3 rounded-lg ${
-                    idx === currentIndex ? "bg-red-700" : "bg-background-dark"
-                  }`}
-                >
-                  <Text className="text-white text-base font-semibold">
-                    {ep.name}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+              {parsedEpisodes.map(
+                (ep: { name: string; link: string }, idx: number) => (
+                  <TouchableOpacity
+                    key={idx}
+                    onPress={() => handleEpisodeChange(idx)}
+                    className={`w-[30%] items-center px-5 py-3 rounded-lg ${
+                      idx === currentIndex ? "bg-red-700" : "bg-background-dark"
+                    }`}
+                  >
+                    <Text className="text-white text-base font-semibold">
+                      {ep.name}
+                    </Text>
+                  </TouchableOpacity>
+                )
+              )}
             </View>
           </View>
         )}
+
+        {/* Tùy chọn để thay đổi tốc độ phát */}
+        <View className="flex-row justify-center mt-6">
+          {renderSpeedButton(0.5)}
+          {renderSpeedButton(1.0)}
+          {renderSpeedButton(1.5)}
+          {renderSpeedButton(2.0)}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

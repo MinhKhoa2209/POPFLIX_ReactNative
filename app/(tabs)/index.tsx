@@ -1,61 +1,60 @@
 import { ActivityIndicator, FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
-import useFetch from "@/services/useFetch";
+import { useEffect, useState } from "react";
+import { FlashList } from "@shopify/flash-list";
+
 import { fetchLatestMovies, fetchMovieListByType } from "@/services/api";
 import { getTrendingMovies } from "@/services/appwrite";
 import { Movie, TrendingMovie } from "@/interfaces/interfaces";
 import { icons } from "@/constants/icons";
-import HotMovieFlatlist from "@/components/HotMovieFlatlist";
+import { images } from "@/constants/images";
 import TrendingSection from "@/components/section/TrendingSection";
 import LatestSection from "@/components/section/LatestSection";
-import { images } from "@/constants/images";
+import HotMovieFlatlist from "@/components/lists/HotMovieFlatlist";
 
 export default function Index() {
   const router = useRouter();
-
-  const {
-    data: trendingMovies,
-    loading: trendingLoading,
-    error: trendingError,
-  } = useFetch(getTrendingMovies);
-
-  const fetchLatestMoviesFivePages = async (): Promise<Movie[]> => {
-    const pages = [1, 2, 3];
-    const allMovies = await Promise.all(pages.map((p) => fetchLatestMovies(p)));
-    return allMovies.flat();
-  };
-
-  const {
-    data: movies,
-    loading: moviesLoading,
-    error: moviesError,
-  } = useFetch<Movie[]>(fetchLatestMoviesFivePages);
-
   const currentYear = new Date().getFullYear();
-  const moviesThisYear = movies
-    ?.filter((movie) => movie.year === currentYear)
-    .slice(0, 12);
 
-  const fetchHotMovies = async (): Promise<Movie[]> => {
-    const response: Movie[] = await fetchMovieListByType({
-      type_list: "hoat-hinh",
-      limit: "30",
-    });
-    return response
-      ?.filter((movie) => movie.year === currentYear)
-      .slice(0, 10);
-  };
+  const [trendingMovies, setTrendingMovies] = useState<TrendingMovie[]>([]);
+  const [hotMovies, setHotMovies] = useState<Movie[]>([]);
+  const [latestMovies, setLatestMovies] = useState<Movie[]>([]);
 
-  const {
-    data: hotMovies,
-    loading: hotMoviesLoading,
-    error: hotMoviesError,
-  } = useFetch<Movie[]>(fetchHotMovies);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const isLoading = trendingLoading || moviesLoading || hotMoviesLoading;
-  const hasError = trendingError || moviesError || hotMoviesError;
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const [trending, hot, latestPages] = await Promise.all([
+          getTrendingMovies(),
+          fetchMovieListByType({ type_list: "hoat-hinh", limit: "30" }),
+          Promise.all([1, 2, 3, 4 , 5 ].map((p) => fetchLatestMovies(p))),
+        ]);
 
-  if (isLoading) {
+        setTrendingMovies(trending ?? []);
+
+        setHotMovies(hot.filter((movie) => movie.year === currentYear).slice(0, 10));
+
+        const latestFlat = latestPages.flat();
+
+        const filteredLatest = latestFlat
+          .filter((movie) => movie.year === currentYear)
+          .slice(0, 12);
+
+        setLatestMovies(filteredLatest);
+      } catch (err: any) {
+        setError(err.message || "Đã xảy ra lỗi khi tải dữ liệu.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  if (loading) {
     return (
       <View className="flex-1 bg-black justify-center items-center">
         <ActivityIndicator size="large" color="#E50914" />
@@ -63,27 +62,25 @@ export default function Index() {
     );
   }
 
-  if (hasError) {
+  if (error) {
     return (
       <View className="flex-1 bg-black justify-center items-center px-6">
-        <Text className="text-red-500 text-center">
-          Error: {trendingError?.message || moviesError?.message || hotMoviesError?.message}
-        </Text>
+        <Text className="text-red-500 text-center">{error}</Text>
       </View>
     );
   }
 
   return (
     <View className="flex-1 bg-black">
-
+      {/* Background Image */}
       <Image
         source={images.bg}
         className="absolute w-full h-80 top-0 left-0"
         resizeMode="cover"
       />
 
-      <View className="z-10">
-        {/* Header */}
+      {/* Header */}
+      <View className="z-10 flex-1">
         <View className="flex-row items-center justify-between mt-10 mb-5 px-5">
           <Text className="text-primary-600 text-3xl font-bold">POPFLIX</Text>
           <TouchableOpacity onPress={() => router.push("/discover")}>
@@ -96,18 +93,18 @@ export default function Index() {
           </TouchableOpacity>
         </View>
 
-        {/* FlatList */}
+        {/* FlashList */}
         <FlatList
-          data={[{ trending: trendingMovies, hot: hotMovies, latest: moviesThisYear }]}
+          data={[{ trending: trendingMovies, hot: hotMovies, latest: latestMovies }]}
           keyExtractor={(_, index) => index.toString()}
           renderItem={({ item }) => (
             <View>
-              {item.hot && item.hot.length > 0 && <HotMovieFlatlist data={item.hot} />}
-              <TrendingSection trendingMovies={item.trending as TrendingMovie[]} />
-              <LatestSection moviesThisYear={item.latest as Movie[]} />
+              {item.hot.length > 0 && <HotMovieFlatlist data={item.hot} />}
+              <TrendingSection trendingMovies={item.trending} />
+              <LatestSection moviesThisYear={item.latest} />
             </View>
           )}
-          ListFooterComponent={() => <View className="h-30" />}
+          ListFooterComponent={() => <View className="h-50" />}
         />
       </View>
     </View>

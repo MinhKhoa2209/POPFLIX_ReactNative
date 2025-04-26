@@ -9,11 +9,11 @@ import {
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { fetchGenres, fetchMovieListByType } from "@/services/api";
-import { movieCategories, typeCategories } from "@/constants/category";
+import { movieCategories, typeCategories, categoryDisplayNames } from "@/constants/category";
 import { icons } from "@/constants/icons";
-import MovieCard from "@/components/MovieCard";
-import HotMovieFlatlist from "@/components/HotMovieFlatlist";
+import MovieCard from "@/components/cards/MovieCard";
 import { Movie } from "@/interfaces/interfaces";
+import HotMovieFlatlist from "@/components/lists/HotMovieFlatlist";
 
 export default function Category() {
   const router = useRouter();
@@ -92,7 +92,7 @@ export default function Category() {
             tintColor="#E50914"
           />
         </TouchableOpacity>
-        <Text className="text-white text-2xl font-bold capitalize">{categoryId}</Text>
+        <Text className="text-white text-2xl font-bold capitalize">{categoryDisplayNames[categoryId]}</Text>
         <TouchableOpacity onPress={() => router.push("/discover")}>
           <Image
             source={icons.search}

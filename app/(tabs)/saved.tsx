@@ -3,7 +3,7 @@ import { useGlobalContext } from "@/app/(auth)/AuthContext";
 import { getFavoritesByUser } from "@/services/appwrite";
 import { icons } from "@/constants/icons";
 import { images } from "@/constants/images";
-import MovieCard from "@/components/MovieCard";
+import MovieCard from "@/components/cards/MovieCard";
 import useFetch from "@/services/useFetch";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";

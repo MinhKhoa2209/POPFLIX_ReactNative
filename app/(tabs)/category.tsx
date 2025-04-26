@@ -13,6 +13,7 @@ import {
   categoryIcons,
   movieIcons,
   categoryColorMap,
+  categoryDisplayNames, 
 } from "../../constants/category";
 import { useRouter } from "expo-router";
 import { images } from "@/constants/images";
@@ -34,13 +35,12 @@ const Category = () => {
             onPress={() => {
               router.push(`/category/${item}`);
             }}
-            
             className="w-[31.33%] h-28 rounded-xl justify-center items-center"
             style={{ backgroundColor: bg }}
           >
             <MaterialIcons name={iconName} size={28} color="white" />
             <Text className="text-white mt-2 text-sm font-medium text-center px-1">
-              {item}
+              {categoryDisplayNames[item]}
             </Text>
           </TouchableOpacity>
         );

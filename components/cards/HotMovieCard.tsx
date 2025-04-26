@@ -2,7 +2,7 @@ import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { Link } from "expo-router";
 import { Movie } from "@/interfaces/interfaces";
-import FastImage from 'react-native-fast-image';
+
 
 const HotMovieCard = React.memo(function HotMovieCard({
   slug,

@@ -1,5 +1,5 @@
 import { FlatList, Text, View } from "react-native";
-import MovieCard from "@/components/MovieCard";
+import MovieCard from "@/components/cards/MovieCard";
 import { Movie } from "@/interfaces/interfaces";
 
 const LatestSection = ({ moviesThisYear }: { moviesThisYear: Movie[] }) => {
