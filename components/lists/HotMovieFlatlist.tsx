@@ -56,17 +56,15 @@ const HotMovieFlatlist = React.memo(({ data }: { data: Movie[] }) => {
         snapToAlignment="start"
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
-        initialNumToRender={3} // Tăng số lượng render item ban đầu
-        maxToRenderPerBatch={4} // Tăng số lượng render item per batch
-        windowSize={7} // Tăng số window size để tối ưu hóa hiệu suất
+        initialNumToRender={3}
+        maxToRenderPerBatch={4} 
+        windowSize={7}
         getItemLayout={(_, index) => ({
           length: screenWidth,
           offset: screenWidth * index,
           index,
         })}
-        removeClippedSubviews={true} // Bật removeClippedSubviews để tiết kiệm bộ nhớ
-        disableVirtualization={false}
-        // Thêm một số tối ưu thêm cho FlatList
+        removeClippedSubviews={false} 
         extraData={currentIndex}
       />
 

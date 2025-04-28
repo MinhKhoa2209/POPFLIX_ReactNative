@@ -1,5 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { ScrollView, Text, View, Image, TouchableOpacity } from "react-native";
+import React, { useEffect, useState, useMemo, useRef } from "react";
+import {
+  ScrollView,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { WebView } from "react-native-webview";
 import { router, useLocalSearchParams } from "expo-router";
 import useFetch from "@/services/useFetch";
@@ -66,30 +73,52 @@ const MovieDetails = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { user } = useGlobalContext();
 
-  const { data: movie } = useFetch<Movie>(() => fetchMovieDetails(id));
-  const { data: videoSources } = useFetch<Episode[]>(() =>
-    fetchMovieVideos(id)
+  const { data: movie, loading: loadingMovie } = useFetch<Movie>(() =>
+    fetchMovieDetails(id)
+  );
+  const { data: videoSources, loading: loadingVideos } = useFetch<Episode[]>(
+    () => fetchMovieVideos(id)
   );
 
-  const episodes = Array.isArray(videoSources)
-    ? videoSources.filter(
-        (episode) => episode.link_m3u8 && episode.link_m3u8.trim() !== ""
-      )
-    : [];
-
-
-
-  const firstAvailableEpisode = episodes.find(
-    (ep) => ep.link_m3u8 && ep.link_m3u8.trim() !== ""
+  const episodes = useMemo(
+    () =>
+      Array.isArray(videoSources)
+        ? videoSources.filter(
+            (ep) => ep.link_m3u8 && ep.link_m3u8.trim() !== ""
+          )
+        : [],
+    [videoSources]
   );
 
+  const firstAvailableEpisode = useMemo(
+    () => episodes.find((ep) => ep.link_m3u8 && ep.link_m3u8.trim() !== ""),
+    [episodes]
+  );
 
   const [isFavorite, setIsFavorite] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [trailerVisible, setTrailerVisible] = useState(false);
 
-  const posterUrl = movie?.poster_url?.startsWith("http")
-    ? movie.poster_url
-    : `https://phimimg.com/${movie?.poster_url}`;
-  const embedUrl = getYtbEmbedUrl(movie?.trailer_url || "");
+  const posterUrl = useMemo(() => {
+    if (!movie?.poster_url) return "";
+    return movie.poster_url.startsWith("http")
+      ? movie.poster_url
+      : `https://phimimg.com/${movie.poster_url}`;
+  }, [movie?.poster_url]);
+
+  const embedUrl = useMemo(
+    () => getYtbEmbedUrl(movie?.trailer_url || ""),
+    [movie?.trailer_url]
+  );
+
+  useEffect(() => {
+    if (!loadingMovie && !loadingVideos) {
+      const timer = setTimeout(() => {
+        setReady(true);
+      }, 300); // Delay nhẹ 300ms để đảm bảo data đã render mượt
+      return () => clearTimeout(timer);
+    }
+  }, [loadingMovie, loadingVideos]);
 
   useEffect(() => {
     const checkFavorite = async () => {
@@ -106,26 +135,28 @@ const MovieDetails = () => {
     try {
       if (isFavorite) {
         await unsaveFavorite(movie.slug, user.$id);
-        Toast.show({
-          type: "success",
-          text1: "Removed from favorites",
-        });
+        Toast.show({ type: "success", text1: "Removed from favorites" });
       } else {
         await saveToFavorites(movie);
-        Toast.show({
-          type: "success",
-          text1: "Added to favorites",
-        });
+        Toast.show({ type: "success", text1: "Added to favorites" });
       }
       setIsFavorite(!isFavorite);
     } catch (err) {
       Toast.show({
         type: "error",
         text1: "Error",
-        text2: "An error occurred while saving to favorites.",
+        text2: "Failed to update favorites.",
       });
     }
   };
+
+  if (!ready) {
+    return (
+      <View className="flex-1 bg-black items-center justify-center">
+        <ActivityIndicator size="large" color="#ffffff" />
+      </View>
+    );
+  }
 
   return (
     <View className="bg-black flex-1">
@@ -133,8 +164,8 @@ const MovieDetails = () => {
         <View className="relative">
           <Image
             source={{ uri: posterUrl }}
-            className="w-full h-[550px]"
-            resizeMode="stretch"
+            className="w-full h-[450px]"
+            resizeMode="cover"
           />
           <TouchableOpacity
             onPress={toggleFavorite}
@@ -153,17 +184,14 @@ const MovieDetails = () => {
               className="absolute bottom-2 right-5 w-16 h-16 bg-white/20 border-2 border-white rounded-full z-10 items-center justify-center shadow-lg active:scale-95"
               onPress={() => {
                 router.push({
-                  pathname: "/movies/watch",
+                  pathname: "/movies/component/Player",
                   params: {
                     link: firstAvailableEpisode.link_m3u8,
                     title: `${movie?.name || ""} - ${
                       firstAvailableEpisode.name
                     }`,
                     episodes: JSON.stringify(
-                      episodes.map((e) => ({
-                        name: e.name,
-                        link: e.link_m3u8,
-                      }))
+                      episodes.map((e) => ({ name: e.name, link: e.link_m3u8 }))
                     ),
                   },
                 });
@@ -207,6 +235,7 @@ const MovieDetails = () => {
           />
         </View>
 
+        {/* Trailer  */}
         {embedUrl && (
           <View className="mt-5 px-5">
             <Text className="text-white text-lg font-bold mb-2">Trailer</Text>
@@ -222,6 +251,7 @@ const MovieDetails = () => {
           </View>
         )}
 
+        {/* Episodes */}
         {episodes.length > 0 && (
           <View className="mt-5 px-5">
             <Text className="text-white text-lg font-bold mb-4 px-2">
@@ -234,7 +264,7 @@ const MovieDetails = () => {
                     className="bg-background-dark px-5 py-3 rounded-lg w-full items-center"
                     onPress={() =>
                       router.push({
-                        pathname: "/movies/watch",
+                        pathname: "/movies/component/Player",
                         params: {
                           link: ep.link_m3u8,
                           title: `${movie?.name || "Unknown Title"} - ${
@@ -261,6 +291,8 @@ const MovieDetails = () => {
           </View>
         )}
       </ScrollView>
+
+      {/* Go Back Button */}
       <TouchableOpacity
         className="absolute bottom-10 mt-2 left-0 right-0 mx-5 bg-primary-600 rounded-lg py-3.5 flex flex-row items-center justify-center z-50"
         onPress={router.back}

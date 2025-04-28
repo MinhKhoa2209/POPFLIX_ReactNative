@@ -9,7 +9,11 @@ import {
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { fetchGenres, fetchMovieListByType } from "@/services/api";
-import { movieCategories, typeCategories, categoryDisplayNames } from "@/constants/category";
+import {
+  movieCategories,
+  typeCategories,
+  categoryDisplayNames,
+} from "@/constants/category";
 import { icons } from "@/constants/icons";
 import MovieCard from "@/components/cards/MovieCard";
 import { Movie } from "@/interfaces/interfaces";
@@ -45,14 +49,13 @@ export default function Category() {
 
   const fetchMoviesThisYearByCategory = useCallback(async () => {
     const allMovies = await fetchDataByCategoryType("50");
-    return allMovies.slice(0, 12); 
+    return allMovies.slice(0, 12);
   }, [fetchDataByCategoryType]);
-  
+
   const fetchHotMovies = useCallback(async () => {
     const allMovies = await fetchDataByCategoryType("30");
-    return allMovies.slice(0, 10); 
+    return allMovies.slice(0, 10);
   }, [fetchDataByCategoryType]);
-  
 
   useEffect(() => {
     let isMounted = true;
@@ -68,12 +71,18 @@ export default function Category() {
       }
     };
     loadData();
+
     return () => {
       isMounted = false;
+      setMoviesThisYear([]);
+      setHotMovies([]);
     };
   }, [fetchMoviesThisYearByCategory, fetchHotMovies]);
 
-  const moviesThisYearMemo = useMemo(() => moviesThisYear || [], [moviesThisYear]);
+  const moviesThisYearMemo = useMemo(
+    () => moviesThisYear || [],
+    [moviesThisYear]
+  );
   const hotMoviesMemo = useMemo(() => hotMovies || [], [hotMovies]);
 
   const renderItem = useCallback(({ item }: { item: Movie }) => {
@@ -84,7 +93,10 @@ export default function Category() {
     <View className="flex-1 bg-black">
       {/* Header */}
       <View className="flex-row items-center justify-between mt-10 mb-5 px-5">
-        <TouchableOpacity onPress={() => router.back()} className="bg-white/10 rounded-full p-2">
+        <TouchableOpacity
+          onPress={() => router.back()}
+          className="bg-white/10 rounded-full p-2"
+        >
           <Image
             source={icons.back}
             className="w-6 h-6"
@@ -92,7 +104,9 @@ export default function Category() {
             tintColor="#E50914"
           />
         </TouchableOpacity>
-        <Text className="text-white text-2xl font-bold capitalize">{categoryDisplayNames[categoryId]}</Text>
+        <Text className="text-white text-2xl font-bold capitalize">
+          {categoryDisplayNames[categoryId]}
+        </Text>
         <TouchableOpacity onPress={() => router.push("/discover")}>
           <Image
             source={icons.search}
@@ -104,7 +118,11 @@ export default function Category() {
       </View>
 
       {isLoading ? (
-        <ActivityIndicator size="large" color="#E50914" style={{ marginTop: 40 }} />
+        <ActivityIndicator
+          size="large"
+          color="#E50914"
+          style={{ marginTop: 40 }}
+        />
       ) : (
         <>
           {/* Hot Movies Section */}
@@ -115,7 +133,9 @@ export default function Category() {
           )}
 
           {/* Latest Movies Title */}
-          <Text className="text-lg text-white font-bold mb-3 px-5">Latest Movies</Text>
+          <Text className="text-lg text-white font-bold mb-3 px-5">
+            Latest Movies
+          </Text>
 
           {/* Movie Grid */}
           <FlatList
