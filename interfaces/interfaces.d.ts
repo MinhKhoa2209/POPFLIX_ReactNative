@@ -71,7 +71,7 @@ interface MovieInfoProps {
   value?: string | number | null;
 }
 
- interface FavoriteMovie {
+ interface InteractionMovie {
   $id: string; 
   user_id: string; 
   name: string;
@@ -94,4 +94,14 @@ interface MovieInfoProps {
     vote_average: number;
     vote_count: number;
   };
+  is_like: boolean;
+  is_favorite: boolean;
+  views: number;
 }
+
+interface Comment {
+  user_id: string;
+  name: string;
+  slug: string;
+  comment: string;
+};

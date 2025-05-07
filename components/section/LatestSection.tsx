@@ -3,12 +3,11 @@ import MovieCard from "@/components/cards/MovieCard";
 import { Movie } from "@/interfaces/interfaces";
 
 const LatestSection = ({ moviesThisYear }: { moviesThisYear: Movie[] }) => {
-  const currentYear = new Date().getFullYear();
   return (
     moviesThisYear && moviesThisYear.length > 0 && (
       <View className="mt-10 px-5">
         <Text className="text-lg text-white font-bold mb-3">
-          Latest Movies ({currentYear})
+          Latest Movies 
         </Text>
         <FlatList
           data={moviesThisYear}

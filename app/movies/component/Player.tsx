@@ -47,7 +47,6 @@ const Player = () => {
     }
   }, [currentEpisode]);
 
-  // Handle fullscreen mode and screen orientation
   useEffect(() => {
     const adjustLayoutForOrientation = async () => {
       if (isFullscreen) {
@@ -60,7 +59,7 @@ const Player = () => {
   }, [isFullscreen]);
 
   useEffect(() => {
-    return () => clearTimeout(controlTimeout); // cleanup timeout when unmount
+    return () => clearTimeout(controlTimeout); 
   }, []);
 
   const seekForward = () => videoRef.current?.seek(currentTime + 15);
@@ -101,7 +100,7 @@ const Player = () => {
             style={{ width: "100%", height: "100%" }}
             paused={paused}
             rate={playbackRate}
-            resizeMode="cover"
+            resizeMode="contain"
             onProgress={({ currentTime }) => setCurrentTime(currentTime)}
             onLoad={({ duration }) => setDuration(duration)}
           />
@@ -136,7 +135,7 @@ const Player = () => {
         </View>
 
         {/* Navigation Buttons */}
-        {!isSingleLink && parsedEpisodes.length > 1 && (
+        {!isSingleLink && parsedEpisodes.length > 0 && (
           <View className="flex-row justify-center mt-3 px-6">
             <TouchableOpacity
               disabled={currentIndex <= 0}
@@ -160,7 +159,7 @@ const Player = () => {
         {!isSingleLink && parsedEpisodes.length > 0 && (
           <View className="mt-6 px-4">
             <Text className="text-white text-lg font-bold mb-3">Choose Episode:</Text>
-            <View className="flex flex-row flex-wrap gap-y-4 gap-x-4 px-2">
+            <View className="flex flex-row flex-wrap gap-y-4 gap-x-4">
               {parsedEpisodes.map((ep: { name: string; link: string }, idx: number) => (
                 <TouchableOpacity
                   key={idx}

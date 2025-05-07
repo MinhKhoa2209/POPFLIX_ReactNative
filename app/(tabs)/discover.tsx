@@ -157,7 +157,7 @@ import ForYouCard from "@/components/cards/ForYouCard";
           />
         ) : (
           <>
-            <View className="flex-row justify-between items-center mb-3 px-5">
+            <View className="flex-row justify-between items-center mb-3 px-3">
               <Text className="text-2xl text-white font-bold">For You</Text>
   
               <View className="flex-row items-center gap-5">

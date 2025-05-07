@@ -9,7 +9,7 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import {
   typeCategories,
-  movieCategories,
+  genresCategories,
   categoryIcons,
   movieIcons,
   categoryColorMap,
@@ -80,7 +80,7 @@ const Category = () => {
             }`}
           >
             <Text className="text-white font-semibold text-center">
-              {tab === "type" ? "Thể loại" : "Phim"}
+              {tab === "type" ? "Genres" : "Types"}
             </Text>
           </TouchableOpacity>
         ))}
@@ -89,11 +89,11 @@ const Category = () => {
       {/* ScrollView */}
       <ScrollView
         className="px-4 py-6 z-10"
-        contentContainerStyle={{ paddingBottom: 20 }}
+        contentContainerStyle={{ paddingBottom: 40 }}
       >
         {activeTab === "type"
           ? renderCategory(typeCategories, categoryIcons)
-          : renderCategory(movieCategories, movieIcons)}
+          : renderCategory(genresCategories, movieIcons)}
       </ScrollView>
     </View>
   );

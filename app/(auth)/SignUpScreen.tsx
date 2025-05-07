@@ -64,7 +64,7 @@ const SignUpScreen = () => {
           onChangeText={setPassword}
         />
           <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
-            <Entypo name={isPasswordVisible ? "eye-with-line" : "eye"} size={22} color="gray" />
+            <Entypo name={isPasswordVisible ? "eye": "eye-with-line" } size={22} color="gray" />
             </TouchableOpacity>
       </View>
 

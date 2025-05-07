@@ -10,7 +10,7 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { fetchGenres, fetchMovieListByType } from "@/services/api";
 import {
-  movieCategories,
+  genresCategories,
   typeCategories,
   categoryDisplayNames,
 } from "@/constants/category";
@@ -31,7 +31,7 @@ export default function Category() {
   const fetchDataByCategoryType = useCallback(
     async (limit: string): Promise<Movie[]> => {
       try {
-        if (movieCategories.includes(categoryId)) {
+        if (genresCategories.includes(categoryId)) {
           return await fetchMovieListByType({ type_list: categoryId, limit });
         } else if (typeCategories.includes(categoryId)) {
           return await fetchGenres({ type_list: categoryId, limit });
@@ -48,12 +48,12 @@ export default function Category() {
   );
 
   const fetchMoviesThisYearByCategory = useCallback(async () => {
-    const allMovies = await fetchDataByCategoryType("50");
+    const allMovies = await fetchDataByCategoryType("15");
     return allMovies.slice(0, 12);
   }, [fetchDataByCategoryType]);
 
   const fetchHotMovies = useCallback(async () => {
-    const allMovies = await fetchDataByCategoryType("30");
+    const allMovies = await fetchDataByCategoryType("15");
     return allMovies.slice(0, 10);
   }, [fetchDataByCategoryType]);
 
@@ -85,9 +85,9 @@ export default function Category() {
   );
   const hotMoviesMemo = useMemo(() => hotMovies || [], [hotMovies]);
 
-  const renderItem = useCallback(({ item }: { item: Movie }) => {
-    return <MovieCard {...item} />;
-  }, []);
+  // const renderItem = useCallback(({ item }: { item: Movie }) => {
+  //   return <MovieCard {...item} />;
+  // }, []);
 
   return (
     <View className="flex-1 bg-black">
@@ -140,12 +140,9 @@ export default function Category() {
           {/* Movie Grid */}
           <FlatList
             data={moviesThisYearMemo}
-            renderItem={renderItem}
+            renderItem={({ item }) => <MovieCard {...item} />}
             keyExtractor={(item) => item._id?.toString() || item.slug}
             numColumns={3}
-            initialNumToRender={12}
-            maxToRenderPerBatch={9}
-            windowSize={7}
             removeClippedSubviews={false}
             columnWrapperStyle={{
               justifyContent: "flex-start",

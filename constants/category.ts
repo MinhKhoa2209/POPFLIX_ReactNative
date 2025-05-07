@@ -1,4 +1,4 @@
-export const movieCategories = [
+export const genresCategories = [
   "phim-le", "phim-bo", "tv-shows", "hoat-hinh"
 ];
 
@@ -77,31 +77,31 @@ export const movieIcons: Record<string, string> = {
 };
 
 export const categoryDisplayNames: Record<string, string> = {
-  "hanh-dong": "Hành động",
-  "co-trang": "Cổ trang",
-  "chien-tranh": "Chiến tranh",
-  "vien-tuong": "Viễn tưởng",
-  "kinh-di": "Kinh dị",
-  "tai-lieu": "Tài liệu",
-  "bi-an": "Bí ẩn",
-  "tinh-cam": "Tình cảm",
-  "tam-ly": "Tâm lý",
-  "the-thao": "Thể thao",
-  "phieu-luu": "Phiêu lưu",
-  "am-nhac": "Âm nhạc",
-  "gia-dinh": "Gia đình",
-  "hoc-duong": "Học đường",
-  "hai-huoc": "Hài hước",
-  "hinh-su": "Hình sự",
-  "vo-thuat": "Võ thuật",
-  "khoa-hoc": "Khoa học",
-  "than-thoai": "Thần thoại",
-  "chinh-kich": "Chính kịch",
-  "kinh-dien": "Kinh điển",
+  "hanh-dong": "Action",
+  "co-trang": "Historical",
+  "chien-tranh": "War",
+  "vien-tuong": "Sci-Fi",
+  "kinh-di": "Horror",
+  "tai-lieu": "Documentary",
+  "bi-an": "Mystery",
+  "tinh-cam": "Romance",
+  "tam-ly": "Psychological",
+  "the-thao": "Sports",
+  "phieu-luu": "Adventure",
+  "am-nhac": "Music",
+  "gia-dinh": "Family",
+  "hoc-duong": "School",
+  "hai-huoc": "Comedy",
+  "hinh-su": "Crime",
+  "vo-thuat": "Martial Arts",
+  "khoa-hoc": "Science",
+  "than-thoai": "Mythology",
+  "chinh-kich": "Drama",
+  "kinh-dien": "Classic",
 
   // movieCategories
-  "phim-le": "Phim lẻ",
-  "phim-bo": "Phim bộ",
+  "phim-le": "Single Movies",
+  "phim-bo": "Series",
   "tv-shows": "TV Shows",
-  "hoat-hinh": "Hoạt hình"
-};  
+  "hoat-hinh": "Cartoon"
+};

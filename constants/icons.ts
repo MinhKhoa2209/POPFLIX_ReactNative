@@ -15,7 +15,8 @@ import unsave from "@/assets/icons/unsave.png";
 import logout from "@/assets/icons/logout.png";
 import category from "@/assets/icons/category.png";
 import back from "@/assets/icons/back.png";
-
+import like from "@/assets/icons/like.png";
+import send from "@/assets/icons/send.png";
 export const icons = {
   home,
   search,
@@ -32,5 +33,7 @@ export const icons = {
   logout,
   unsave,
   category,
-  back
+  back,
+  like,
+  send
 };

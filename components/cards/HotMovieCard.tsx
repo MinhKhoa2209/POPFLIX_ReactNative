@@ -21,7 +21,7 @@ const HotMovieCard = React.memo(function HotMovieCard({
         <Image
             source={{ uri: fullPosterUrl }}
             resizeMode="cover"
-            className="w-full h-full " 
+            className="w-full h-[250px] " 
           />
           <View className="absolute top-0 left-0 right-0 bottom-0 justify-center items-center p-4 bg-black/30">
             <Text

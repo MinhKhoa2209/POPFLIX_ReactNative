@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { View, TouchableOpacity, Text, Modal } from "react-native";
 import Slider from "@react-native-community/slider";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -36,11 +36,24 @@ const ControlPlayer = ({
   onToggleFullscreen,
 }: ControlPlayerProps) => {
   const [showSpeedOptions, setShowSpeedOptions] = useState(false);
+  const [isSeeking, setIsSeeking] = useState(false);
+  const seekTimeRef = useRef(0);
+  const waitingSeekRef = useRef(false); // Thêm biến này
 
   const handleSpeedSelect = (speed: number) => {
     onToggleSpeed(speed);
     setShowSpeedOptions(false);
   };
+
+  useEffect(() => {
+    if (waitingSeekRef.current) {
+      // Nếu đang chờ seek và currentTime đã gần bằng vị trí mình thả ra
+      if (Math.abs(currentTime - seekTimeRef.current) < 0.5) {
+        setIsSeeking(false);
+        waitingSeekRef.current = false;
+      }
+    }
+  }, [currentTime]);
 
   return (
     <View className="absolute inset-0 justify-center items-center z-10">
@@ -64,7 +77,7 @@ const ControlPlayer = ({
       </View>
 
       {/* Speed + Fullscreen */}
-      <View className="absolute bottom-4 left-2 right-2 flex-row justify-between px-6">
+      <View className="absolute bottom-4 left-2 right-2 flex-row justify-between px-3">
         <TouchableOpacity onPress={() => setShowSpeedOptions(true)}>
           <MaterialIcons name="speed" size={28} color="white" />
         </TouchableOpacity>
@@ -81,18 +94,30 @@ const ControlPlayer = ({
       {/* Slider + Time */}
       <View className="absolute bottom-8 left-2 right-2 mb-4">
         <View className="flex-row justify-between px-5">
-          <Text className="text-white text-xs">{formatTime(currentTime)}</Text>
+          <Text className="text-white text-xs">
+            {formatTime(isSeeking ? seekTimeRef.current : currentTime)}
+          </Text>
           <Text className="text-white text-xs">{formatTime(duration)}</Text>
         </View>
+
         <Slider
           style={{ width: "100%" }}
           minimumValue={0}
           maximumValue={duration}
-          value={currentTime}
-          onValueChange={onSliderChange}
+          value={isSeeking ? seekTimeRef.current : currentTime}
           thumbTintColor="white"
           minimumTrackTintColor="white"
           maximumTrackTintColor="gray"
+          onValueChange={(value) => {
+            seekTimeRef.current = value;
+          }}
+          onSlidingStart={() => {
+            setIsSeeking(true);
+          }}
+          onSlidingComplete={(value) => {
+            onSliderChange(value);
+            waitingSeekRef.current = true; 
+          }}
         />
       </View>
 
@@ -108,14 +133,18 @@ const ControlPlayer = ({
             alignItems: "center",
           }}
         >
-          <View style={{ backgroundColor: "white", borderRadius: 8, padding: 20 }}>
+          <View
+            style={{ backgroundColor: "white", borderRadius: 8, padding: 20 }}
+          >
             {[0.5, 1.0, 1.5, 2.0].map((speed) => (
               <TouchableOpacity
                 key={speed}
                 onPress={() => handleSpeedSelect(speed)}
                 style={{ marginVertical: 10 }}
               >
-                <Text style={{ fontSize: 18, color: "black", textAlign: "center" }}>
+                <Text
+                  style={{ fontSize: 18, color: "black", textAlign: "center" }}
+                >
                   {speed}x
                 </Text>
               </TouchableOpacity>

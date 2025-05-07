@@ -30,7 +30,7 @@ const RootLayoutInner = () => {
     return (
       <View className="flex-1 bg-primary">
         <View className="flex-1 justify-center items-center">
-          <ActivityIndicator size="large" color="#AB8BFF" />
+          <ActivityIndicator size="large" color="#E50914" />
           <Text className="mt-4 text-dark-100">Checking your session...</Text>
         </View>
       </View>

@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   ScrollView,
   TextInput,
+  Alert,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useGlobalContext } from "@/app/(auth)/AuthContext";
@@ -40,24 +41,41 @@ const Profile = () => {
     })();
   }, []);
 
-  const handleLogout = async () => {
-    setIsLoading(true);
-    const result = await logout();
-    setIsLoading(false);
-    if (result) {
-      refetch();
-      Toast.show({
-        type: "success",
-        text1: "Logged out successfully!",
-        visibilityTime: 1500,
-      });
-    } else {
-      Toast.show({
-        type: "error",
-        text1: "Logout Failed",
-        text2: "Unable to logout. Please try again.",
-      });
-    }
+  const handleLogout = () => {
+    Alert.alert(
+      "Confirm Logout",
+      "Are you sure you want to log out?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Log Out",
+          style: "destructive",
+          onPress: async () => {
+            setIsLoading(true);
+            const result = await logout();
+            setIsLoading(false);
+  
+            if (result) {
+              refetch();
+              Toast.show({
+                type: "success",
+                text1: "Logged out successfully!",
+                visibilityTime: 1500,
+              });
+            } else {
+              Toast.show({
+                type: "error",
+                text1: "Logout Failed",
+                text2: "Unable to log out. Please try again.",
+              });
+            }
+          },
+        },
+      ]
+    );
   };
 
   const handleEditAvatar = async () => {
@@ -166,10 +184,9 @@ const Profile = () => {
       <ScrollView
         className="flex-1 px-5"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ minHeight: "100%", paddingBottom: 10 }}
+        contentContainerStyle={{ minHeight: "100%"}}
       >
-       
-
+      
         <View className="items-center">
           <View className="relative mt-10">
             <Image
