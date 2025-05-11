@@ -89,7 +89,7 @@ const Category = () => {
       {/* ScrollView */}
       <ScrollView
         className="px-4 py-6 z-10"
-        contentContainerStyle={{ paddingBottom: 40 }}
+        contentContainerStyle={{ paddingBottom: 50 }}
       >
         {activeTab === "type"
           ? renderCategory(typeCategories, categoryIcons)

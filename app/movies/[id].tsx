@@ -370,19 +370,15 @@ const MovieDetails = () => {
             <Text className="text-white">{movie?.year}</Text>
             <Text className="text-white">{movie?.time}</Text>
             <Text className="text-white">{movie?.quality}</Text>
-            {averageRating !== null && (
+  
                <View className="flex-row items-center">
-               <Text className="text-yellow mr-1">{averageRating}</Text>
+               <Text className="text-yellow mr-1">{averageRating ?? 0}</Text>
                <Image source={icons.star} className="h-5 w-5" tintColor={"#FACC15"}/>
              </View>
-      
-            )}
-            {totalLikes > 0 && (
               <View className="flex-row items-center">
-                <Text className="text-green mr-1">{totalLikes}</Text>
+                <Text className="text-green mr-1">{totalLikes?? 0}</Text>
                 <Image source={icons.like} className="h-5 w-5" tintColor={"#34D399"}/>
               </View>
-            )}
           </View>
           {/* Rating */}
           <View className="flex-row items-center mt-4">

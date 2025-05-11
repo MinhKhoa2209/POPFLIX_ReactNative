@@ -114,7 +114,7 @@ const LoginScreen = () => {
             onPress={() => setIsPasswordVisible(!isPasswordVisible)}
           >
             <Entypo
-              name={isPasswordVisible ? "eye": "eye-with-line"  }
+              name={isPasswordVisible ? "eye-with-line" :"eye"  }
               size={22}
               color="gray"
             />
